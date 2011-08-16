@@ -4,22 +4,20 @@ window.addTagToHtmlBody = (new_tag) ->
 describe "coffefx", ->
   beforeEach ->
     addTagToHtmlBody('<div id="test"></div>')
-    @moveInstance = new Move('test')
+    @moveInstance = new Move('#test')
 
   it "Should exist Move object", ->
     (expect new Move).toBeDefined
   
   describe "on create", ->
     it "should set assign the selector to the el property", ->
-      (expect @moveInstance.el).toEqual 'test'
+      (expect @moveInstance.el).toEqual '#test'
       
     it "should set defaults and return a Move instance", ->
-      "PENDING".toEqual "pending"
-      # (expect @moveInstance._rotate).toEqual 0
-      # (expect @moveInstance._transitionProps).toEqual []
-      # (expect @moveInstance._transforms).toEqual []
-      # (expect @moveInstance.duration).toEqual { -webkit-transition-duration : '500ms', -moz-transition-duration : '500ms', -ms-transition-duration : '500ms', -o-transition-duration : '500ms' }
-      # (expect @moveInstance._props).toEqual { -webkit-transition-duration : '500ms', -moz-transition-duration : '500ms', -ms-transition-duration : '500ms', -o-transition-duration : '500ms' }
+      (expect @moveInstance._rotate).toEqual 0
+      (expect @moveInstance._transitionProps).toEqual []
+      (expect @moveInstance._transforms).toEqual []
+      (expect @moveInstance._props["-webkit-transition-duration"]).toEqual "500ms"
 
   it "transform function should assign a transform to _transforms", ->
     @moveInstance.transform('test')
@@ -119,8 +117,41 @@ describe "coffefx", ->
       (expect @moveInstance._props['-moz-test']).toEqual 'value'
       (expect @moveInstance._props['-ms-test']).toEqual 'value'
       (expect @moveInstance._props['-o-test']).toEqual 'value'
-      
+    
+    describe "set (add the objects in _props)", ->
+      it "if value is numeric and in maps return string with type", ->
+        @moveInstance.set("width", 10)
+        (expect @moveInstance._props['width']).toEqual '10px'
 
+      it "if value is numeric and not in maps return integer", ->
+        @moveInstance.set("widtho", 10)
+        (expect @moveInstance._props['widtho']).toEqual 10
+
+      it "if value is string and not in maps return string", ->
+        @moveInstance.set("widtho", '10')
+        (expect @moveInstance._props['widtho']).toEqual '10'
+
+      it "if value is string and in maps return string", ->
+        @moveInstance.set("width", '10')
+        (expect @moveInstance._props['width']).toEqual '10'
+
+    it "add push a new function in the callbacks", ->
+      @moveInstance.add('width', 200)
+      @moveInstance.callbacks.start[0]()
+      console.log  @moveInstance._props['width']
+      (expect @moveInstance._props['width']).toEqual = "200p"
+
+    # it "sub push a new function in the callbacks", ->
+    #   @moveInstance.sub("width", "100")
+    #   console.log @moveInstance.callbacks.start[0]
+    #   (expect @moveInstance.callbacks.start[0]()).toEqual = "100"
+    
+    it "pending testing current", ->
+      "PENDING".toEqual "pending"
+
+    it "transition has to add in _transitionProps", ->
+      @moveInstance.transition("test")
+      (expect @moveInstance._transitionProps).toEqual = ["test"]
  
   describe "function move()", ->
     it "should be defined", ->
@@ -155,14 +186,20 @@ describe "coffefx", ->
         (expect move.select('test')).toBeDefined
 
   describe "if extends EventEmitter", ->
-    "PENDING".toEqual "pending"
     
-    # it "should have 'on' function", ->
-    #   pending
-    #   #pending # and function
-    #   (expect move().on).toEqual ""
-    # 
-    # it "should have 'emit' function", ->
-    #   #pending and function
-    #   (expect move().emit).toEqual ""
+    it "should have 'on' function", ->
+      @moveInstance.on("test", -> "hola")
+      (expect @moveInstance.callbacks.test[0]()).toEqual "hola"
+    
+    it "should have 'emit' function", ->
+      callback = jasmine.createSpy();
+      @moveInstance.on("test", callback)
+      @moveInstance.emit("test")
+      expect(callback).toHaveBeenCalled
+
+    it "should have 'emit' function", ->
+      callback = jasmine.createSpy();
+      @moveInstance.on("test", callback)
+      @moveInstance.emit("testo")
+      expect(callback).not.toHaveBeenCalled
       

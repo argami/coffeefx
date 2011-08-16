@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, Move;
+  var EventEmitter, Move, map;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -13,6 +13,25 @@
   };
   window.move.defaults = {
     duration: 500
+  };
+  map = {
+    'top': 'px',
+    'bottom': 'px',
+    'left': 'px',
+    'right': 'px',
+    'width': 'px',
+    'height': 'px',
+    'font-size': 'px',
+    'margin': 'px',
+    'margin-top': 'px',
+    'margin-bottom': 'px',
+    'margin-left': 'px',
+    'margin-right': 'px',
+    'padding': 'px',
+    'padding-top': 'px',
+    'padding-bottom': 'px',
+    'padding-left': 'px',
+    'padding-right': 'px'
   };
   window.move.ease = {
     'in': 'ease-in',
@@ -57,6 +76,7 @@
       this._rotate = 0;
       this._transitionProps = [];
       this._transforms = [];
+      this.duration(move.defaults.duration);
     }
     Move.prototype.transform = function(transform) {
       this._transforms.push(transform);
@@ -132,6 +152,101 @@
         brow = _ref[_i];
         this.setProperty(brow + prop, val);
       }
+      return this;
+    };
+    Move.prototype.set = function(prop, val) {
+      this.transition(prop);
+      if ('number' === typeof val && map[prop]) {
+        val += map[prop];
+      }
+      this._props[prop] = val;
+      return this;
+    };
+    Move.prototype.add = function(prop, val) {
+      var self;
+      self = this;
+      return this.on('start', function() {
+        return self.set(prop, parseInt(self.current(prop), 10) + val + 'px');
+      });
+    };
+    Move.prototype.sub = function(prop, val) {
+      var self;
+      self = this;
+      return this.on('start', function() {
+        return self.set(prop, parseInt(self.current(prop), 10) - val + 'px');
+      });
+    };
+    Move.prototype.current = function(prop) {
+      return current(this.el).getPropertyValue(prop);
+    };
+    Move.prototype.transition = function(prop) {
+      if (!this._transitionProps.indexOf(prop)) {
+        return this;
+      }
+      this._transitionProps.push(prop);
+      return this;
+    };
+    Move.prototype.applyProperties = function() {
+      var el, prop, props;
+      props = this._props;
+      el = this.el;
+      if ((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = props.length; _i < _len; _i++) {
+          prop = props[_i];
+          _results.push(props.hasOwnProperty(prop));
+        }
+        return _results;
+      })()) {
+        el.style.setProperty(prop, props[prop], '');
+      }
+      return this;
+    };
+    Move.prototype.move = function(selector) {
+      return this.select(selector);
+    };
+    Move.prototype.select = function(selector) {
+      this.el = move.select(selector);
+      return this;
+    };
+    Move.prototype.then = function(fn) {
+      var clone;
+      if (fn instanceof Move) {
+        this.on('end', function() {
+          return fn.end();
+        });
+      } else if ('function' === typeof fn) {
+        this.on('end', fn);
+      } else {
+        clone = new Move(this.el);
+        clone._transforms = this._transforms.slice(0);
+        this.then(clone);
+        clone.parent = this;
+        return clone;
+      }
+      this;
+      return {
+        pop: function() {
+          return this.parent;
+        }
+      };
+    };
+    Move.prototype.end = function(fn) {
+      var self;
+      self = this;
+      this.emit('start');
+      if (this._transforms.length) {
+        this.setVendorProperty('transform', this._transforms.join(' '));
+      }
+      this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
+      this.applyProperties();
+      if (fn) {
+        this.then(fn);
+      }
+      setTimeout((function() {
+        return self.emit('end');
+      }), this._duration);
       return this;
     };
     return Move;

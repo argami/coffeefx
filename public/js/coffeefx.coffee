@@ -14,6 +14,33 @@ window.move = (selector) ->
 #########################################
 window.move.defaults = { duration: 500 }
 
+
+# /**
+#  * Map of prop -> type for numeric values.
+#  */
+
+map = {
+   'top': 'px'
+   'bottom': 'px'
+   'left': 'px'
+   'right': 'px'
+   'width': 'px'
+   'height': 'px'
+   'font-size': 'px'
+   'margin': 'px'
+   'margin-top': 'px'
+   'margin-bottom': 'px'
+   'margin-left': 'px'
+   'margin-right': 'px'
+   'padding': 'px'
+   'padding-top': 'px'
+   'padding-bottom': 'px'
+   'padding-left': 'px'
+   'padding-right': 'px'
+ }
+
+
+
 #########################################
 # Easing functions.
 #########################################
@@ -93,7 +120,7 @@ window.Move = class Move extends EventEmitter
     @_rotate = 0
     @_transitionProps = []
     @_transforms = []
-    # @duration(move.defaults.duration)
+    @duration(move.defaults.duration)
     
   #########################################
   # Buffer `transform`.
@@ -283,3 +310,169 @@ window.Move = class Move extends EventEmitter
   setVendorProperty: (prop, val) ->
     @setProperty(brow + prop, val) for brow in ['-webkit-', '-moz-', '-ms-', '-o-']
     @
+
+
+  # /**
+  #  * Set `prop` to `value`, deferred until `.end()` is invoked
+  #  * and adds the property to the list of transition props.
+  #  *
+  #  * @param {String} prop
+  #  * @param {String} val
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  set: (prop, val) ->
+    @transition(prop)
+    val += map[prop] if ('number' == typeof val and map[prop]) 
+    @_props[prop] = val
+    @
+
+  # /**
+  #  * Increment `prop` by `val`, deferred until `.end()` is invoked
+  #  * and adds the property to the list of transition props.
+  #  *
+  #  * @param {String} prop
+  #  * @param {Number} val
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  add: (prop, val) ->
+    self =@ ;
+    @on 'start', -> self.set(prop, parseInt(self.current(prop), 10) + val + 'px');
+
+  # /**
+  #  * Decrement `prop` by `val`, deferred until `.end()` is invoked
+  #  * and adds the property to the list of transition props.
+  #  *
+  #  * @param {String} prop
+  #  * @param {Number} val
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  sub: (prop, val) ->
+    self = @
+    @on('start', -> self.set(prop, parseInt(self.current(prop), 10) - val + 'px'))
+
+  # /**
+  #  * Get computed or "current" value of `prop`.
+  #  *
+  #  * @param {String} prop
+  #  * @return {String}
+  #  * @api public
+  #  */
+
+  current: (prop) -> current(@el).getPropertyValue(prop)
+  
+  
+  # /**
+  #  * Add `prop` to the list of internal transition properties.
+  #  *
+  #  * @param {String} prop
+  #  * @return {Move} for chaining
+  #  * @api private
+  #  */
+
+  transition: (prop) ->
+    return @ if (!this._transitionProps.indexOf(prop)) 
+    this._transitionProps.push(prop);
+    @
+
+  # /**
+  #  * Commit style properties, aka apply them to `el.style`.
+  #  *
+  #  * @return {Move} for chaining
+  #  * @see Move#end()  
+  #  * @api private
+  #  */
+
+  applyProperties: ->
+    props = @_props
+    el = @el;
+    el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) for prop in props
+    @
+
+  # /**
+  #  * Re-select element via `selector`, replacing
+  #  * the current element.
+  #  *
+  #  * @param {String} selector
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  move: (selector) -> @select(selector)
+  select: (selector) ->
+    @el = move.select(selector);
+    @
+
+  # /**
+  #  * Defer the given `fn` until the animation
+  #  * is complete. `fn` may be one of the following:
+  #  *
+  #  *   - a function to invoke
+  #  *   - an instanceof `Move` to call `.end()`
+  #  *   - nothing, to return a clone of this `Move` instance for chaining
+  #  *
+  #  * @param {Function|Move} fn
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  then: (fn) ->
+    # // invoke .end()
+    if (fn instanceof Move) 
+      @on('end', -> fn.end())
+    # // callback
+    else if ('function' == typeof fn) 
+      @on('end', fn)
+    # // chain
+    else
+      clone = new Move(this.el)
+      clone._transforms = this._transforms.slice(0)
+      @then(clone)
+      clone.parent = @
+      return clone
+
+    @
+
+    # /**
+    #  * Pop the move context.
+    #  *
+    #  * @return {Move} parent Move
+    #  * @api public
+    #  */
+
+    pop: -> @parent;
+
+  # /**
+  #  * Start animation, optionally calling `fn` when complete.
+  #  *
+  #  * @param {Function} fn
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  end: (fn) ->
+    self = @
+
+    # // emit "start" event
+    @emit('start');
+
+    # // transforms
+    @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
+
+    # // transition properties
+    @setVendorProperty('transition-properties', this._transitionProps.join(', '));
+    @applyProperties();
+
+    # // callback given
+    @then(fn) if (fn) 
+
+    # // emit "end" when complete
+    setTimeout( (-> self.emit('end')), this._duration)
+
+    @
+

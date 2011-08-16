@@ -5,17 +5,20 @@
   describe("coffefx", function() {
     beforeEach(function() {
       addTagToHtmlBody('<div id="test"></div>');
-      return this.moveInstance = new Move('test');
+      return this.moveInstance = new Move('#test');
     });
     it("Should exist Move object", function() {
       return (expect(new Move)).toBeDefined;
     });
     describe("on create", function() {
       it("should set assign the selector to the el property", function() {
-        return (expect(this.moveInstance.el)).toEqual('test');
+        return (expect(this.moveInstance.el)).toEqual('#test');
       });
       return it("should set defaults and return a Move instance", function() {
-        return "PENDING".toEqual("pending");
+        (expect(this.moveInstance._rotate)).toEqual(0);
+        (expect(this.moveInstance._transitionProps)).toEqual([]);
+        (expect(this.moveInstance._transforms)).toEqual([]);
+        return (expect(this.moveInstance._props["-webkit-transition-duration"])).toEqual("500ms");
       });
     });
     it("transform function should assign a transform to _transforms", function() {
@@ -110,12 +113,43 @@
         (expect(this.moveInstance._props["test"])).toBeDefined;
         return (expect(this.moveInstance._props["test"])).toEqual("value");
       });
-      return it("setVendorProperty should add the objects in _props", function() {
+      it("setVendorProperty should add the objects in _props", function() {
         this.moveInstance.setVendorProperty("test", "value");
         (expect(this.moveInstance._props['-webkit-test'])).toEqual('value');
         (expect(this.moveInstance._props['-moz-test'])).toEqual('value');
         (expect(this.moveInstance._props['-ms-test'])).toEqual('value');
         return (expect(this.moveInstance._props['-o-test'])).toEqual('value');
+      });
+      describe("set (add the objects in _props)", function() {
+        it("if value is numeric and in maps return string with type", function() {
+          this.moveInstance.set("width", 10);
+          return (expect(this.moveInstance._props['width'])).toEqual('10px');
+        });
+        it("if value is numeric and not in maps return integer", function() {
+          this.moveInstance.set("widtho", 10);
+          return (expect(this.moveInstance._props['widtho'])).toEqual(10);
+        });
+        it("if value is string and not in maps return string", function() {
+          this.moveInstance.set("widtho", '10');
+          return (expect(this.moveInstance._props['widtho'])).toEqual('10');
+        });
+        return it("if value is string and in maps return string", function() {
+          this.moveInstance.set("width", '10');
+          return (expect(this.moveInstance._props['width'])).toEqual('10');
+        });
+      });
+      it("add push a new function in the callbacks", function() {
+        this.moveInstance.add('width', 200);
+        this.moveInstance.callbacks.start[0]();
+        console.log(this.moveInstance._props['width']);
+        return (expect(this.moveInstance._props['width'])).toEqual = "200p";
+      });
+      it("pending testing current", function() {
+        return "PENDING".toEqual("pending");
+      });
+      return it("transition has to add in _transitionProps", function() {
+        this.moveInstance.transition("test");
+        return (expect(this.moveInstance._transitionProps)).toEqual = ["test"];
       });
     });
     describe("function move()", function() {
@@ -152,7 +186,26 @@
       });
     });
     return describe("if extends EventEmitter", function() {
-      return "PENDING".toEqual("pending");
+      it("should have 'on' function", function() {
+        this.moveInstance.on("test", function() {
+          return "hola";
+        });
+        return (expect(this.moveInstance.callbacks.test[0]())).toEqual("hola");
+      });
+      it("should have 'emit' function", function() {
+        var callback;
+        callback = jasmine.createSpy();
+        this.moveInstance.on("test", callback);
+        this.moveInstance.emit("test");
+        return expect(callback).toHaveBeenCalled;
+      });
+      return it("should have 'emit' function", function() {
+        var callback;
+        callback = jasmine.createSpy();
+        this.moveInstance.on("test", callback);
+        this.moveInstance.emit("testo");
+        return expect(callback).not.toHaveBeenCalled;
+      });
     });
   });
 }).call(this);
