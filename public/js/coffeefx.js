@@ -1,5 +1,5 @@
 (function() {
-  var EventEmitter, Move, map;
+  var EventEmitter, Move, current, map;
   var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -14,6 +14,7 @@
   window.move.defaults = {
     duration: 500
   };
+  current = getComputedStyle || currentStyle;
   map = {
     'top': 'px',
     'bottom': 'px',
@@ -51,14 +52,12 @@
       return this;
     };
     EventEmitter.prototype.emit = function(event) {
-      var args, callbacks, i, len, _i, _len;
-      args = [Array.prototype.slice.call(arguments, 1), callbacks = this.callbacks[event], len];
-      if (callbacks) {
-        len = callbacks.length;
-        for (_i = 0, _len = len.length; _i < _len; _i++) {
-          i = len[_i];
-          callbacks[i].apply(this, args);
-        }
+      var args, callback, callbacks, _i, _len, _ref;
+      args = Array.prototype.slice.call(arguments, 1);
+      callbacks = (_ref = this.callbacks[event]) != null ? _ref : [];
+      for (_i = 0, _len = callbacks.length; _i < _len; _i++) {
+        callback = callbacks[_i];
+        callback.apply(this, args);
       }
       return this;
     };

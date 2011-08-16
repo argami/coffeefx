@@ -15,6 +15,13 @@ window.move = (selector) ->
 window.move.defaults = { duration: 500 }
 
 
+#########################################
+#  * Computed style.
+#########################################
+
+current = getComputedStyle || currentStyle
+
+
 # /**
 #  * Map of prop -> type for numeric values.
 #  */
@@ -50,7 +57,7 @@ window.move.ease = {
   'out': 'ease-out'
   'in-out': 'ease-in-out'
   'snap': 'cubic-bezier(0,1,.5,1)'
-};
+}
 
 #########################################
 # Default element selection utilized by `move(selector)`.
@@ -68,7 +75,7 @@ window.move.ease = {
 #########################################
 
 window.move.select = (selector) ->
-  document.getElementById(selector) || document.querySelectorAll(selector)[0];
+  document.getElementById(selector) || document.querySelectorAll(selector)[0]
 
 #########################################
 # EventEmitter.
@@ -76,7 +83,7 @@ window.move.select = (selector) ->
 
 class EventEmitter
   constructor: ->
-    @callbacks = {};
+    @callbacks = {}
   
   #########################################
   # Listen on the given `event` with `fn`.
@@ -86,7 +93,7 @@ class EventEmitter
   #########################################
 
   on: (event, fn) ->
-    (@callbacks[event] = @callbacks[event] || []).push(fn);
+    (@callbacks[event] = @callbacks[event] || []).push(fn)
     @
 
   #########################################
@@ -97,11 +104,9 @@ class EventEmitter
   #########################################
 
   emit: (event) ->
-    args = [Array.prototype.slice.call(arguments, 1) ,callbacks = this.callbacks[event], len]
-
-    if (callbacks)
-      len = callbacks.length;
-      callbacks[i].apply(this, args) for i in len
+    args = Array.prototype.slice.call(arguments, 1)
+    callbacks = @callbacks[event] ? []
+    callback.apply(@, args) for callback in callbacks
     @
 
 
@@ -339,8 +344,8 @@ window.Move = class Move extends EventEmitter
   #  */
 
   add: (prop, val) ->
-    self =@ ;
-    @on 'start', -> self.set(prop, parseInt(self.current(prop), 10) + val + 'px');
+    self =@
+    @on 'start', -> self.set(prop, parseInt(self.current(prop), 10) + val + 'px')
 
   # /**
   #  * Decrement `prop` by `val`, deferred until `.end()` is invoked
@@ -377,7 +382,7 @@ window.Move = class Move extends EventEmitter
 
   transition: (prop) ->
     return @ if (!this._transitionProps.indexOf(prop)) 
-    this._transitionProps.push(prop);
+    this._transitionProps.push(prop)
     @
 
   # /**
@@ -390,7 +395,7 @@ window.Move = class Move extends EventEmitter
 
   applyProperties: ->
     props = @_props
-    el = @el;
+    el = @el
     el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) for prop in props
     @
 
@@ -405,7 +410,7 @@ window.Move = class Move extends EventEmitter
 
   move: (selector) -> @select(selector)
   select: (selector) ->
-    @el = move.select(selector);
+    @el = move.select(selector)
     @
 
   # /**
@@ -445,7 +450,7 @@ window.Move = class Move extends EventEmitter
     #  * @api public
     #  */
 
-    pop: -> @parent;
+    pop: -> @parent
 
   # /**
   #  * Start animation, optionally calling `fn` when complete.
@@ -459,14 +464,14 @@ window.Move = class Move extends EventEmitter
     self = @
 
     # // emit "start" event
-    @emit('start');
+    @emit('start')
 
     # // transforms
     @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
 
     # // transition properties
-    @setVendorProperty('transition-properties', this._transitionProps.join(', '));
-    @applyProperties();
+    @setVendorProperty('transition-properties', this._transitionProps.join(', '))
+    @applyProperties()
 
     # // callback given
     @then(fn) if (fn) 

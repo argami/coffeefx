@@ -137,9 +137,10 @@ describe "coffefx", ->
 
     it "add push a new function in the callbacks", ->
       @moveInstance.add('width', 200)
-      @moveInstance.callbacks.start[0]()
       console.log  @moveInstance._props['width']
-      (expect @moveInstance._props['width']).toEqual = "200p"
+      @moveInstance.callbacks.start[0]()
+      # 
+      # (expect @moveInstance._props['width']).toEqual = "200p"
 
     # it "sub push a new function in the callbacks", ->
     #   @moveInstance.sub("width", "100")

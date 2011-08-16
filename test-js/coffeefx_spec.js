@@ -140,9 +140,8 @@
       });
       it("add push a new function in the callbacks", function() {
         this.moveInstance.add('width', 200);
-        this.moveInstance.callbacks.start[0]();
         console.log(this.moveInstance._props['width']);
-        return (expect(this.moveInstance._props['width'])).toEqual = "200p";
+        return this.moveInstance.callbacks.start[0]();
       });
       it("pending testing current", function() {
         return "PENDING".toEqual("pending");
