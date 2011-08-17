@@ -396,7 +396,9 @@ window.Move = class Move extends EventEmitter
   applyProperties: ->
     props = @_props
     el = @el
-    el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) for prop in props
+    for prop of props
+      console.log prop
+      el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) 
     @
 
   # /**
@@ -467,6 +469,7 @@ window.Move = class Move extends EventEmitter
     @emit('start')
 
     # // transforms
+    console.log  @_transforms.join(' ')
     @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
 
     # // transition properties

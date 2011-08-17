@@ -189,16 +189,11 @@
       var el, prop, props;
       props = this._props;
       el = this.el;
-      if ((function() {
-        var _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = props.length; _i < _len; _i++) {
-          prop = props[_i];
-          _results.push(props.hasOwnProperty(prop));
+      for (prop in props) {
+        console.log(prop);
+        if (props.hasOwnProperty(prop)) {
+          el.style.setProperty(prop, props[prop], '');
         }
-        return _results;
-      })()) {
-        el.style.setProperty(prop, props[prop], '');
       }
       return this;
     };
@@ -235,6 +230,7 @@
       var self;
       self = this;
       this.emit('start');
+      console.log(this._transforms.join(' '));
       if (this._transforms.length) {
         this.setVendorProperty('transform', this._transforms.join(' '));
       }
