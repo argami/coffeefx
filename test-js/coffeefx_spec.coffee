@@ -191,7 +191,7 @@ describe "coffefx", ->
     it "should have 'on' function", ->
       @moveInstance.on("test", -> "hola")
       (expect @moveInstance.callbacks.test[0]()).toEqual "hola"
-    
+
     it "should have 'emit' function", ->
       callback = jasmine.createSpy();
       @moveInstance.on("test", callback)

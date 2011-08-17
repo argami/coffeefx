@@ -190,7 +190,6 @@
       props = this._props;
       el = this.el;
       for (prop in props) {
-        console.log(prop);
         if (props.hasOwnProperty(prop)) {
           el.style.setProperty(prop, props[prop], '');
         }
@@ -219,18 +218,15 @@
         clone.parent = this;
         return clone;
       }
-      this;
-      return {
-        pop: function() {
-          return this.parent;
-        }
-      };
+      return this;
+    };
+    Move.prototype.pop = function() {
+      return this.parent;
     };
     Move.prototype.end = function(fn) {
       var self;
       self = this;
       this.emit('start');
-      console.log(this._transforms.join(' '));
       if (this._transforms.length) {
         this.setVendorProperty('transform', this._transforms.join(' '));
       }

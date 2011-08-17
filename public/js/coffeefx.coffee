@@ -397,7 +397,6 @@ window.Move = class Move extends EventEmitter
     props = @_props
     el = @el
     for prop of props
-      console.log prop
       el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) 
     @
 
@@ -438,21 +437,20 @@ window.Move = class Move extends EventEmitter
     # // chain
     else
       clone = new Move(this.el)
-      clone._transforms = this._transforms.slice(0)
+      clone._transforms = @_transforms.slice(0)
       @then(clone)
       clone.parent = @
       return clone
-
     @
+    
+  # /**
+  #  * Pop the move context.
+  #  *
+  #  * @return {Move} parent Move
+  #  * @api public
+  #  */
 
-    # /**
-    #  * Pop the move context.
-    #  *
-    #  * @return {Move} parent Move
-    #  * @api public
-    #  */
-
-    pop: -> @parent
+  pop: -> @parent
 
   # /**
   #  * Start animation, optionally calling `fn` when complete.
@@ -469,7 +467,6 @@ window.Move = class Move extends EventEmitter
     @emit('start')
 
     # // transforms
-    console.log  @_transforms.join(' ')
     @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
 
     # // transition properties

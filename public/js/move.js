@@ -129,7 +129,6 @@
     var args = Array.prototype.slice.call(arguments, 1)
       , callbacks = this.callbacks[event]
       , len;
-    console.log(args);
     if (callbacks) {
       len = callbacks.length;
       for (var i = 0; i < len; ++i) {
