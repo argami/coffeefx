@@ -22,57 +22,24 @@
       height: 100px;
       border: 2px black solid;
     }
-    
-    
-    .animation_box_985295 {   
-      -webkit-animation-name: animation_box_985295; 
-      -webkit-animation-duration: 3s; 
-    } 
-    
-    @-webkit-keyframes animation_box_985295 {
-      from {  
-        margin-left: 200px; 
-      }    
-    }
-
-    .test {
-      -webkit-animation-duration: 500ms;
-      -webkit-animation-name: slidein;
-    }
-
-    @-webkit-keyframes slidein {
-      from {
-        margin-left: 200px; 
-      }
-
-    }
-
-    .diagonalslide {
-      -webkit-animation-name: diagonal-slide;
-      -webkit-animation-duration: 5s;
-      -webkit-animation-iteration-count: 10;
-      -webkit-animation-timing-function:linear;
-    }
-    
-    @-webkit-keyframes diagonal-slide {
-      50% {
-        -webkit-transform:scale(0.5);
-      }
-      
+    #legend {
+      color:gray;
+      font-size:12px;
     }
   </style>
   <script type="text/coffeescript">
-      box = move("#box")
-      fn = () -> box.rotate(10).then().rotate(-10).end()
-      window.box = () -> box.rotate(10).duration(5000).iteration(10).end()
+      window.box = () -> move('#box').rotate(360).duration(100).iteration('infinite').end()
   </script>
 </head>
 <body>
 
 
 <div id="wrapper">
-    <div id="box" onClick="className='animation_box_879856'" ><a href="#" >HOLA</a></div>
+    <div id="box"><a href="#" >HOLA</a></div>
     <a href="#" onclick="box()">DOS</a>
+</div>
+<div id="legend">
+  move('#box').add('margin-left', 200).duration('1s').iteration(10).end()
 </div>
 </body>
 </html>

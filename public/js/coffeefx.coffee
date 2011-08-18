@@ -417,12 +417,11 @@ window.Move = class Move extends EventEmitter
   #  * @return {Move} for chaining
   #  * @api private
   #  */
-
   transition: (prop) ->
     return @ if (!this._transitionProps.indexOf(prop)) 
     this._transitionProps.push(prop)
     @
-
+  
   # /**
   #  * Commit style properties, aka apply them to `el.style`.
   #  *
@@ -441,7 +440,7 @@ window.Move = class Move extends EventEmitter
     
     
     rules = " -webkit-animation-name: animation_#{@name};\n"
-    rules +=" #{prop}: #{props[prop]};\n" for prop of @_animations
+    rules +=" #{prop}: #{value};\n" for prop, value of @_animations
     rules = ".animation_#{@name} { \n #{rules} }"
     
     keyframe = ""
@@ -462,9 +461,6 @@ window.Move = class Move extends EventEmitter
     document.getElementsByTagName("head")[0].appendChild(cssAnimation)
     window.setTimeout((-> el.style.webkitAnimationName = "animation_#{self.name}"), 0);
     el.className = "animation_#{@name}"
-    # el.setAttribute("class", "animation_#{@name}")
-    # el.style.setProperty("-webkit-animation-name", "animation_#{@name}", '')
-    
     
     @
 

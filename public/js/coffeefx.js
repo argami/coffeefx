@@ -205,15 +205,17 @@
       return this;
     };
     Move.prototype.applyProperties = function() {
-      var cssAnimation, el, keyframe, prop, props, rules, self;
+      var cssAnimation, el, keyframe, prop, props, rules, self, value, _ref;
       props = this._props;
       el = this.el;
       cssAnimation = document.createElement('style');
       cssAnimation.id = "coffeeFxStyle";
       cssAnimation.type = 'text/css';
       rules = " -webkit-animation-name: animation_" + this.name + ";\n";
-      for (prop in this._animations) {
-        rules += " " + prop + ": " + props[prop] + ";\n";
+      _ref = this._animations;
+      for (prop in _ref) {
+        value = _ref[prop];
+        rules += " " + prop + ": " + value + ";\n";
       }
       rules = ".animation_" + this.name + " { \n " + rules + " }";
       keyframe = "";
