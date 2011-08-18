@@ -1,17 +1,17 @@
 window.addTagToHtmlBody = (new_tag) ->
-  # ($ new_tag).appendTo('body')
+  ($ new_tag).appendTo('body')
 
 describe "coffefx", ->
   beforeEach ->
     addTagToHtmlBody('<div id="test"></div>')
-    @moveInstance = new Move('#test')
+    @moveInstance = move('#test')
 
   it "Should exist Move object", ->
-    (expect new Move).toBeDefined
+    (expect Move).toBeDefined
   
   describe "on create", ->
     it "should set assign the selector to the el property", ->
-      (expect @moveInstance.el).toEqual '#test'
+      (expect @moveInstance.el.id).toEqual 'test'
       
     it "should set defaults and return a Move instance", ->
       (expect @moveInstance._rotate).toEqual 0
@@ -135,20 +135,18 @@ describe "coffefx", ->
         @moveInstance.set("width", '10')
         (expect @moveInstance._props['width']).toEqual '10'
 
-    it "add push a new function in the callbacks", ->
+    it "add, push a new function in the callbacks", ->
       @moveInstance.add('width', 200)
-      console.log  @moveInstance._props['width']
       @moveInstance.callbacks.start[0]()
-      # 
-      # (expect @moveInstance._props['width']).toEqual = "200p"
+      (expect @moveInstance._props['width']).toEqual = "200p"
 
     # it "sub push a new function in the callbacks", ->
     #   @moveInstance.sub("width", "100")
     #   console.log @moveInstance.callbacks.start[0]
     #   (expect @moveInstance.callbacks.start[0]()).toEqual = "100"
     
-    it "pending testing current", ->
-      "PENDING".toEqual "pending"
+    # it "pending testing current", ->
+    #   "PENDING".toEqual "pending"
 
     it "transition has to add in _transitionProps", ->
       @moveInstance.transition("test")
@@ -156,13 +154,11 @@ describe "coffefx", ->
  
   describe "function move()", ->
     it "should be defined", ->
-      spyOn(move, 'select');
-      
-      (expect move()).toBeDefined
-      (expect move.select).toHaveBeenCalled();
+      (expect move).toBeDefined
+      (expect typeof move == 'function').toBeThrusty
 
     it "should return a instance of Move", ->
-      (expect move() instanceof Move).toEqual true
+      (expect move('#test') instanceof Move).toEqual true
 
     it "should have a version", ->
       (expect move.version).toBeDefined

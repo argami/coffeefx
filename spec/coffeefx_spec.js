@@ -1,16 +1,18 @@
 (function() {
-  window.addTagToHtmlBody = function(new_tag) {};
+  window.addTagToHtmlBody = function(new_tag) {
+    return ($(new_tag)).appendTo('body');
+  };
   describe("coffefx", function() {
     beforeEach(function() {
       addTagToHtmlBody('<div id="test"></div>');
-      return this.moveInstance = new Move('#test');
+      return this.moveInstance = move('#test');
     });
     it("Should exist Move object", function() {
-      return (expect(new Move)).toBeDefined;
+      return (expect(Move)).toBeDefined;
     });
     describe("on create", function() {
       it("should set assign the selector to the el property", function() {
-        return (expect(this.moveInstance.el)).toEqual('#test');
+        return (expect(this.moveInstance.el.id)).toEqual('test');
       });
       return it("should set defaults and return a Move instance", function() {
         (expect(this.moveInstance._rotate)).toEqual(0);
@@ -136,13 +138,10 @@
           return (expect(this.moveInstance._props['width'])).toEqual('10');
         });
       });
-      it("add push a new function in the callbacks", function() {
+      it("add, push a new function in the callbacks", function() {
         this.moveInstance.add('width', 200);
-        console.log(this.moveInstance._props['width']);
-        return this.moveInstance.callbacks.start[0]();
-      });
-      it("pending testing current", function() {
-        return "PENDING".toEqual("pending");
+        this.moveInstance.callbacks.start[0]();
+        return (expect(this.moveInstance._props['width'])).toEqual = "200p";
       });
       return it("transition has to add in _transitionProps", function() {
         this.moveInstance.transition("test");
@@ -151,12 +150,11 @@
     });
     describe("function move()", function() {
       it("should be defined", function() {
-        spyOn(move, 'select');
-        (expect(move())).toBeDefined;
-        return (expect(move.select)).toHaveBeenCalled();
+        (expect(move)).toBeDefined;
+        return (expect(typeof move === 'function')).toBeThrusty;
       });
       it("should return a instance of Move", function() {
-        return (expect(move() instanceof Move)).toEqual(true);
+        return (expect(move('#test') instanceof Move)).toEqual(true);
       });
       it("should have a version", function() {
         return (expect(move.version)).toBeDefined;
