@@ -125,8 +125,22 @@ window.Move = class Move extends EventEmitter
     @_rotate = 0
     @_transitionProps = []
     @_transforms = []
+    @_animations = {}
     @duration(move.defaults.duration)
+    @name = "#{@el.id}_#{Math.floor(Math.random()*1000001)}"
     
+  #########################################
+  # Add a name to the animation needed for 
+  # they keyframe and the class
+  #
+  # @param {String} name
+  # @api public
+  #########################################
+
+  name: (name) ->
+    @name=name
+    @
+
   #########################################
   # Buffer `transform`.
   # 
@@ -277,6 +291,17 @@ window.Move = class Move extends EventEmitter
     @setVendorProperty('transition-duration', "#{@_duration}ms")
     
     
+  
+  # /** -webkit-animation-iteration-count  
+  #  * Set number of iterations to `n`.
+  #  * 
+  #  * @param {Number} n
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  iteration: (n) -> @setAnimationProp('animation-iteration-count', n)
+    
   # /**
   #  * Delay the animation by `n`.
   #  * If is text is converted in ms (multiply by 1000)
@@ -316,6 +341,18 @@ window.Move = class Move extends EventEmitter
     @setProperty(brow + prop, val) for brow in ['-webkit-', '-moz-', '-ms-', '-o-']
     @
 
+  # /**   
+  #  * Set a animation prefixed `prop` with the given `val`.
+  #  * 
+  #  * @param {String} prop
+  #  * @param {String} val
+  #  * @return {Move} for chaining
+  #  * @api public
+  #  */
+
+  setAnimationProp: (prop, val) -> 
+    @_animations[brow+prop] = val for brow in ['-webkit-', '-moz-', '-ms-', '-o-']
+    @
 
   # /**
   #  * Set `prop` to `value`, deferred until `.end()` is invoked
@@ -396,8 +433,37 @@ window.Move = class Move extends EventEmitter
   applyProperties: ->
     props = @_props
     el = @el
+    
+    cssAnimation = document.createElement('style');
+    cssAnimation.id = "coffeeFxStyle"
+    cssAnimation.type = 'text/css'
+    
+    
+    rules = " -webkit-animation-name: animation_#{@name};\n"
+    rules +=" #{prop}: #{props[prop]};\n" for prop of @_animations
+    rules = ".animation_#{@name} { \n #{rules} }"
+    
+    keyframe = ""
     for prop of props
-      el.style.setProperty(prop, props[prop], '') if (props.hasOwnProperty(prop)) 
+      keyframe += " #{prop}: #{props[prop]};\n" if (props.hasOwnProperty(prop))
+    keyframe = "@-webkit-keyframes animation_#{@name} {\n
+      from { #{keyframe} }
+    }" 
+    
+    self = @
+    # rules = '@-webkit-keyframes slider {'+
+    # 'from { left:100px; }'+
+    # '80% { left:150px; }'+
+    # '90% { left:160px; }'+
+    # 'to { left:150px; }'+
+    # '}');
+    cssAnimation.appendChild( document.createTextNode("#{rules}\n #{keyframe}") )
+    document.getElementsByTagName("head")[0].appendChild(cssAnimation)
+    window.setTimeout((-> el.style.webkitAnimationName = "animation_#{self.name}"), 0);
+    # el.setAttribute("class", "animation_#{@name}")
+    # el.style.setProperty("-webkit-animation-name", "animation_#{@name}", '')
+    
+    
     @
 
   # /**
@@ -462,7 +528,6 @@ window.Move = class Move extends EventEmitter
 
   end: (fn) ->
     self = @
-
     # // emit "start" event
     @emit('start')
 
@@ -470,14 +535,14 @@ window.Move = class Move extends EventEmitter
     @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
 
     # // transition properties
-    @setVendorProperty('transition-properties', this._transitionProps.join(', '))
-    @applyProperties()
-
-    # // callback given
-    @then(fn) if (fn) 
-
-    # // emit "end" when complete
-    setTimeout( (-> self.emit('end')), this._duration)
+    @setVendorProperty('transition-properties', @_transitionProps.join(', '))
+    @applyProperties() 
+    # 
+    # 
+    # # // callback given
+    # @then(fn) if (fn) 
+    # 
+    # # // emit "end" when complete
+    # setTimeout((-> self.emit('end')), @_duration)
 
     @
-

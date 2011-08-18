@@ -1,7 +1,5 @@
 (function() {
-  window.addTagToHtmlBody = function(new_tag) {
-    return ($(new_tag)).appendTo('body');
-  };
+  window.addTagToHtmlBody = function(new_tag) {};
   describe("coffefx", function() {
     beforeEach(function() {
       addTagToHtmlBody('<div id="test"></div>');

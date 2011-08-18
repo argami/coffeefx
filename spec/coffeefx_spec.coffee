@@ -1,5 +1,5 @@
 window.addTagToHtmlBody = (new_tag) ->
-  ($ new_tag).appendTo('body')
+  # ($ new_tag).appendTo('body')
 
 describe "coffefx", ->
   beforeEach ->

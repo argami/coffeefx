@@ -75,8 +75,14 @@
       this._rotate = 0;
       this._transitionProps = [];
       this._transforms = [];
+      this._animations = {};
       this.duration(move.defaults.duration);
+      this.name = "" + this.el.id + "_" + (Math.floor(Math.random() * 1000001));
     }
+    Move.prototype.name = function(name) {
+      this.name = name;
+      return this;
+    };
     Move.prototype.transform = function(transform) {
       this._transforms.push(transform);
       return this;
@@ -136,6 +142,9 @@
       this._duration = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this.setVendorProperty('transition-duration', "" + this._duration + "ms");
     };
+    Move.prototype.iteration = function(n) {
+      return this.setAnimationProp('animation-iteration-count', n);
+    };
     Move.prototype.delay = function(n) {
       n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this.setVendorProperty('transition-delay', "" + n + "ms");
@@ -150,6 +159,15 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         brow = _ref[_i];
         this.setProperty(brow + prop, val);
+      }
+      return this;
+    };
+    Move.prototype.setAnimationProp = function(prop, val) {
+      var brow, _i, _len, _ref;
+      _ref = ['-webkit-', '-moz-', '-ms-', '-o-'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        brow = _ref[_i];
+        this._animations[brow + prop] = val;
       }
       return this;
     };
@@ -186,14 +204,30 @@
       return this;
     };
     Move.prototype.applyProperties = function() {
-      var el, prop, props;
+      var cssAnimation, el, keyframe, prop, props, rules, self;
       props = this._props;
       el = this.el;
+      cssAnimation = document.createElement('style');
+      cssAnimation.id = "coffeeFxStyle";
+      cssAnimation.type = 'text/css';
+      rules = " -webkit-animation-name: animation_" + this.name + ";\n";
+      for (prop in this._animations) {
+        rules += " " + prop + ": " + props[prop] + ";\n";
+      }
+      rules = ".animation_" + this.name + " { \n " + rules + " }";
+      keyframe = "";
       for (prop in props) {
         if (props.hasOwnProperty(prop)) {
-          el.style.setProperty(prop, props[prop], '');
+          keyframe += " " + prop + ": " + props[prop] + ";\n";
         }
       }
+      keyframe = "@-webkit-keyframes animation_" + this.name + " {\n      from { " + keyframe + " }    }";
+      self = this;
+      cssAnimation.appendChild(document.createTextNode("" + rules + "\n " + keyframe));
+      document.getElementsByTagName("head")[0].appendChild(cssAnimation);
+      window.setTimeout((function() {
+        return el.style.webkitAnimationName = "animation_" + self.name;
+      }), 0);
       return this;
     };
     Move.prototype.move = function(selector) {
@@ -232,12 +266,6 @@
       }
       this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
       this.applyProperties();
-      if (fn) {
-        this.then(fn);
-      }
-      setTimeout((function() {
-        return self.emit('end');
-      }), this._duration);
       return this;
     };
     return Move;
