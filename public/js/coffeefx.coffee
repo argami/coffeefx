@@ -289,6 +289,7 @@ window.Move = class Move extends EventEmitter
   duration: (n) ->
     @_duration = if 'string' == typeof n then parseFloat(n) * 1000 else n
     @setVendorProperty('transition-duration', "#{@_duration}ms")
+    @setAnimationProp('animation-duration', "#{@_duration}ms")
     
     
   
@@ -460,6 +461,7 @@ window.Move = class Move extends EventEmitter
     cssAnimation.appendChild( document.createTextNode("#{rules}\n #{keyframe}") )
     document.getElementsByTagName("head")[0].appendChild(cssAnimation)
     window.setTimeout((-> el.style.webkitAnimationName = "animation_#{self.name}"), 0);
+    el.className = "animation_#{@name}"
     # el.setAttribute("class", "animation_#{@name}")
     # el.style.setProperty("-webkit-animation-name", "animation_#{@name}", '')
     

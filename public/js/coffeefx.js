@@ -140,7 +140,8 @@
     };
     Move.prototype.duration = function(n) {
       this._duration = 'string' === typeof n ? parseFloat(n) * 1000 : n;
-      return this.setVendorProperty('transition-duration', "" + this._duration + "ms");
+      this.setVendorProperty('transition-duration', "" + this._duration + "ms");
+      return this.setAnimationProp('animation-duration', "" + this._duration + "ms");
     };
     Move.prototype.iteration = function(n) {
       return this.setAnimationProp('animation-iteration-count', n);
@@ -228,6 +229,7 @@
       window.setTimeout((function() {
         return el.style.webkitAnimationName = "animation_" + self.name;
       }), 0);
+      el.className = "animation_" + this.name;
       return this;
     };
     Move.prototype.move = function(selector) {

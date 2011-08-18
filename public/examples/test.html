@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>CoffeeScript Test</title>
+  <script src="../../../others/coffee-script.js"></script>
+  <script src="../js/coffeefx.js"></script>
+  <style>
+    body {
+      margin: 30px;
+      font-family: Menlo, Monaco, monospace;
+    }
+    #wrapper {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    #box{
+      width: 100px;
+      height: 100px;
+      border: 2px black solid;
+    }
+    
+    
+    .animation_box_985295 {   
+      -webkit-animation-name: animation_box_985295; 
+      -webkit-animation-duration: 3s; 
+    } 
+    
+    @-webkit-keyframes animation_box_985295 {
+      from {  
+        margin-left: 200px; 
+      }    
+    }
+
+    .test {
+      -webkit-animation-duration: 500ms;
+      -webkit-animation-name: slidein;
+    }
+
+    @-webkit-keyframes slidein {
+      from {
+        margin-left: 200px; 
+      }
+
+    }
+
+    .diagonalslide {
+      -webkit-animation-name: diagonal-slide;
+      -webkit-animation-duration: 5s;
+      -webkit-animation-iteration-count: 10;
+      -webkit-animation-timing-function:linear;
+    }
+    
+    @-webkit-keyframes diagonal-slide {
+      50% {
+        -webkit-transform:scale(0.5);
+      }
+      
+    }
+  </style>
+  <script type="text/coffeescript">
+      box = move("#box")
+      fn = () -> box.rotate(10).then().rotate(-10).end()
+      window.box = () -> box.rotate(10).duration(5000).iteration(10).end()
+  </script>
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div id="box" onClick="className='animation_box_879856'" ><a href="#" >HOLA</a></div>
+    <a href="#" onclick="box()">DOS</a>
+</div>
+</body>
+</html>
