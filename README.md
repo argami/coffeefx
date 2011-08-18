@@ -2,7 +2,7 @@
 
 Is a animation library based on CSS3 standard to use all the power that CSS3 with hardware aceleration
 can give us. Based in first instance as a translation from [Move.js](http://visionmedia.github.com/move.js/)
-
+to CoffeeScript and adding some testing in Jasmine
 
 ### Testing
 
