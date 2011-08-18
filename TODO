@@ -1,0 +1,34 @@
+This is all theoric still working in the best way to do this
+
+Need to generate animations but at the same time we need to be able to do basic transformations and transitions
+
+first i think the api should be like
+
+move("#object")
+	.name("animation_name")
+		.animation_property()  //any of the properties in animation (duaration | status | ...)
+		.step("from")  // this one can be from | to | or a number (we can also do from() and to() functions)
+			.transition(...)
+			.transformation(...)
+			.property(..)
+		.step()....
+	.then() //change context
+		.name() // new animation
+		...
+	.then()
+		.transformation // be able to set a transformation or a transition directly to 
+		.transition			// the content no animation needed
+		...
+		
+we need to separate Transition and Transformations in diferents classes to be able from each animation as
+well in animation be able to use it
+
+class transition
+class transformation
+
+class Move extend transition, transformation
+	has many animations
+	
+	
+
+class animation extend Transition, Transformation
