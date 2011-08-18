@@ -66,15 +66,14 @@
   window.Move = Move = (function() {
     __extends(Move, EventEmitter);
     function Move(el) {
-      if (!(this instanceof Move)) {
-        return new Move(el);
-      }
+      if (!(this instanceof Move)) return new Move(el);
       EventEmitter.call(this);
       this.el = el;
       this._props = {};
       this._rotate = 0;
       this._transitionProps = [];
       this._transforms = [];
+      this._interval = false;
       this.duration(move.defaults.duration);
     }
     Move.prototype.transform = function(transform) {
@@ -82,9 +81,7 @@
       return this;
     };
     Move.prototype.skew = function(x, y) {
-      if (y == null) {
-        y = 0;
-      }
+      if (y == null) y = 0;
       return this.transform("skew(" + x + "deg, " + y + "deg)");
     };
     Move.prototype.skewX = function(n) {
@@ -94,15 +91,11 @@
       return this.transform("skewY(" + n + "deg)");
     };
     Move.prototype.translate = function(x, y) {
-      if (y == null) {
-        y = 0;
-      }
+      if (y == null) y = 0;
       return this.to(x, y);
     };
     Move.prototype.to = function(x, y) {
-      if (y == null) {
-        y = 0;
-      }
+      if (y == null) y = 0;
       return this.transform("translate(" + x + "px, " + y + "px)");
     };
     Move.prototype.translateX = function(n) {
@@ -155,9 +148,7 @@
     };
     Move.prototype.set = function(prop, val) {
       this.transition(prop);
-      if ('number' === typeof val && map[prop]) {
-        val += map[prop];
-      }
+      if ('number' === typeof val && map[prop]) val += map[prop];
       this._props[prop] = val;
       return this;
     };
@@ -179,9 +170,7 @@
       return current(this.el).getPropertyValue(prop);
     };
     Move.prototype.transition = function(prop) {
-      if (!this._transitionProps.indexOf(prop)) {
-        return this;
-      }
+      if (!this._transitionProps.indexOf(prop)) return this;
       this._transitionProps.push(prop);
       return this;
     };
@@ -232,8 +221,26 @@
       }
       this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
       this.applyProperties();
+      if (fn) this.then(fn);
+      setTimeout((function() {
+        return self.emit('end');
+      }), this._duration);
+      return this;
+    };
+    Move.prototype.loop = function(fn) {
+      var self;
+      self = this;
+      this.emit('start');
+      if (this._transforms.length) {
+        this.setVendorProperty('transform', this._transforms.join(' '));
+      }
+      this.setVendorProperty('transition-properties', this._transitionProps.join(', '));
+      this.applyProperties();
       if (fn) {
-        this.then(fn);
+        if (!this._interval) {
+          setInterval(fn, this._duration);
+          this._interval = true;
+        }
       }
       setTimeout((function() {
         return self.emit('end');
