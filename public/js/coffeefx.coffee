@@ -125,6 +125,7 @@ window.Move = class Move extends EventEmitter
     @_rotate = 0
     @_transitionProps = []
     @_transforms = []
+    @_interval = false
     @duration(move.defaults.duration)
     
   #########################################
@@ -478,6 +479,31 @@ window.Move = class Move extends EventEmitter
 
     # // emit "end" when complete
     setTimeout( (-> self.emit('end')), this._duration)
+    
+    @
+  
+  # loop hack!
+  loop: (fn) ->
+    self = @
 
+    # // emit "start" event
+    @emit('start')
+
+    # // transforms
+    @setVendorProperty('transform', @_transforms.join(' ')) if (@_transforms.length) 
+
+    # // transition properties
+    @setVendorProperty('transition-properties', this._transitionProps.join(', '))
+    @applyProperties()
+
+    # // set interval with callback given
+    if (fn)
+        if !(@._interval)
+            setInterval(fn, @_duration)
+            @_interval = true
+
+    # // emit "end" when complete
+    setTimeout( (-> self.emit('end')), this._duration)
+    
     @
 
