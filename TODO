@@ -20,6 +20,23 @@ move("#object")
 		.transition			// the content no animation needed
 		...
 		
+move()
+	.transform().rotate().skew()
+	.animation("name", callback).delay()
+		.transform().rotate().skew()
+		.step()
+			.transform().rotate().skew()
+			.transition()...
+		.onEnd(callback)
+	.end()
+
+
+The context will be change by default when has no name and:
+	name() -> generates a animation name
+		step() -> generates a new context in the animation
+	then() -> generates a new context
+
+
 we need to separate Transition and Transformations in diferents classes to be able from each animation as
 well in animation be able to use it
 
@@ -29,6 +46,30 @@ class transformation
 class Move extend transition, transformation
 	has many animations
 	
-	
-
 class animation extend Transition, Transformation
+
+
+BIG PROBLEM javascript dont allow multiple inheritance ------ 
+
+Maybe using JSON??
+
+ {	"transformation": {
+				xxx:yyyyy
+				yyy:xxxxx
+				}
+		 "animation" : {
+				name:
+				delay:
+				callback: function(){}
+				xxx:yyyyy
+				yyy:xxxxx
+
+				from {
+					xxx:yyyyy
+					yyy:xxxxx
+				
+					}
+				.....
+			}
+		}
+ADVANTAGE TO USE JSON EASY TO DEBUG AND TEST

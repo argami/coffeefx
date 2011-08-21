@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>CoffeeScript Test</title>
+  <script src="../../../others/coffee-script.js"></script>
+  <script src="../js/coffeefx.js"></script>
+  <style>
+    body {
+      margin: 30px;
+      font-family: Menlo, Monaco, monospace;
+    }
+    #wrapper {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    .box{
+      width: 100px;
+      height: 100px;
+      border: 2px black solid;
+    }
+    #legend {
+      color:gray;
+      font-size:12px;
+    }
+
+  </style>
+  
+  <script type="text/coffeescript">
+      window.box = () -> coffeefx('.box').rotate(360).transitionDuration('3s').end()
+  </script>
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div class="box" onclick="className='box'"><a href="#" >HOLA</a></div>
+    <a href="#" onclick="box()">DOS</a>
+</div>
+<div id="legend">
+  coffeefx('.box').rotate(360).transitionDuration(100).end()
+</div>
+</body>
+</html>
