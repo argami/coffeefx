@@ -355,6 +355,7 @@ window.Coffeefx = class Coffeefx
   x: (n) -> @translateX(n)
   translateX: (n) -> @transform("translateX(#{n}px)")
 
+
   ###
   ---------------------------------
   # * Translate on the y axis to `n`.
@@ -365,8 +366,10 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  y: (n) -> @translateY(y)
-  translateY: (n) -> @transform("translateY(#{n}px)")
+  y: (n) -> @translateY(n)
+  translateY: (n) -> 
+    @transform("translateY(#{n}px)")
+    @
   
   ###
   ---------------------------------

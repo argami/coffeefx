@@ -341,10 +341,11 @@
       ---------------------------------
       */
     Coffeefx.prototype.y = function(n) {
-      return this.translateY(y);
+      return this.translateY(n);
     };
     Coffeefx.prototype.translateY = function(n) {
-      return this.transform("translateY(" + n + "px)");
+      this.transform("translateY(" + n + "px)");
+      return this;
     };
     /*
       ---------------------------------
