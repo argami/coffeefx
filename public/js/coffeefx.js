@@ -103,6 +103,9 @@
       ---------------------------------
       */
     Coffeefx.prototype.set = function(key, value) {
+      if ('number' === typeof value && map[key]) {
+        value += map[key];
+      }
       this.context()[key] = value;
       return this;
     };
@@ -152,8 +155,7 @@
       }
       context = context != null ? context : this._context;
       text = JSON.stringify(this._fx[this._context]);
-      text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, "; }").replace(/}/gi, "; }");
-      return text = "." + this._context + " " + text;
+      return text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";");
     };
     /*
       ---------------------------------
@@ -201,7 +203,7 @@
       }
       self = this;
       this._addCssClass(this._context, this._prepare(context));
-      return this.el.className += " " + this._context;
+      return this.el.style.cssText = this._prepare();
     };
     /*
       ---------------------------------
@@ -427,6 +429,20 @@
       */
     Coffeefx.prototype.add = function(prop, val) {
       return this.set(prop, parseInt(this.current(prop), 10) + val + 'px');
+    };
+    /*
+      ---------------------------------
+        Decrement `prop` by `val`, deferred until `.end()` is invoked
+        and adds the property to the list of transition props.
+    
+        @param {String} prop
+        @param {Number} val
+        @return {Move} for chaining
+        @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.sub = function(prop, val) {
+      return this.set(prop, parseInt(this.current(prop), 10) - val + 'px');
     };
     return Coffeefx;
   })();

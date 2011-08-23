@@ -80,11 +80,11 @@ describe "coffeefx", ->
 
       it "prepare should generate the class from the JSON for the actual context", ->
         @cfx.skew(9,0)
-        (expect @cfx._prepare()).toEqual ".#{@cfx._context} {-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ; }"
+        (expect @cfx._prepare()).toEqual "-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ;"
 
       it "prepare should generate the class from the JSON specifying the context", ->
         @cfx.skew(9,0)
-        (expect @cfx._prepare(@cfx._context)).toEqual ".#{@cfx._context} {-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ; }"
+        (expect @cfx._prepare(@cfx._context)).toEqual "-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ;"
 
 
     describe "transforms", ->

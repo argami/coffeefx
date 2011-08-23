@@ -147,6 +147,7 @@ window.Coffeefx = class Coffeefx
   ###
 
   set: (key, value) -> 
+    value += map[key] if ('number' == typeof value and map[key])
     @context()[key] = value
     @
 
@@ -186,8 +187,7 @@ window.Coffeefx = class Coffeefx
   _prepare: (context = null) -> 
     context = context ? @_context
     text = JSON.stringify @_fx[@_context]
-    text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, "; }").replace(/}/gi, "; }")
-    text = ".#{@_context} #{text}"
+    text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
 
 
   ###
@@ -234,8 +234,7 @@ window.Coffeefx = class Coffeefx
   end: (context =null) ->
     self = @
     @_addCssClass( @_context, @_prepare(context) )
-    # a = @el.className
-    @el.className += " #{@_context}"
+    @el.style.cssText = @_prepare()
 
   ##################################################################
   # Transforms
@@ -455,3 +454,19 @@ window.Coffeefx = class Coffeefx
 
   add: (prop, val) ->
     @set(prop, parseInt(@current(prop), 10) + val + 'px')
+
+  ###
+  ---------------------------------
+    Decrement `prop` by `val`, deferred until `.end()` is invoked
+    and adds the property to the list of transition props.
+
+    @param {String} prop
+    @param {Number} val
+    @return {Move} for chaining
+    @api public
+  ---------------------------------
+  ###
+
+  sub: (prop, val) ->
+    @set(prop, parseInt(@current(prop), 10) - val + 'px')
+    

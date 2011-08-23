@@ -104,11 +104,11 @@
         });
         it("prepare should generate the class from the JSON for the actual context", function() {
           this.cfx.skew(9, 0);
-          return (expect(this.cfx._prepare())).toEqual("." + this.cfx._context + " {-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ; }");
+          return (expect(this.cfx._prepare())).toEqual("-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ;");
         });
         return it("prepare should generate the class from the JSON specifying the context", function() {
           this.cfx.skew(9, 0);
-          return (expect(this.cfx._prepare(this.cfx._context))).toEqual("." + this.cfx._context + " {-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ; }");
+          return (expect(this.cfx._prepare(this.cfx._context))).toEqual("-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ;");
         });
       });
       return describe("transforms", function() {
