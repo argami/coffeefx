@@ -48,13 +48,6 @@ describe "coffeefx", ->
         cfx.context()
         (expect cfx._context.search(cfx.el.className)).toBeGreaterThan -1
 
-      it "should generate a context name using the classname in case select by id an eliminating 
-          the spaces in case to be more than one classname", ->
-        cfx = coffeefx(".classname_noid")
-        cfx.context()
-        (expect cfx._context).toBeDefined
-
-
       it "should return the same context", ->
         @cfx._context = "test_context"
         (expect @cfx.context()).toEqual {}
@@ -102,6 +95,7 @@ describe "coffeefx", ->
         (expect @cfx.origin).not.toEqual undefined
         (expect @cfx.perspective).not.toEqual undefined
         (expect @cfx.transformStyle).not.toEqual undefined
+        (expect @cfx.ease).not.toEqual undefined
 
       it "skew should exist in -{brow}-transform with the values 3, 5", ->
         @cfx.skew(3, 5)

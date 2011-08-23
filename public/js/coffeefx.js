@@ -24,6 +24,12 @@
     'padding-left': 'px',
     'padding-right': 'px'
   };
+  window.coffeefx.ease = {
+    'in': 'ease-in',
+    'out': 'ease-out',
+    'in-out': 'ease-in-out',
+    'snap': 'cubic-bezier(0,1,.5,1)'
+  };
   window.Coffeefx = Coffeefx = (function() {
     function Coffeefx(selector) {
       if (selector == null) {
@@ -443,6 +449,39 @@
       */
     Coffeefx.prototype.sub = function(prop, val) {
       return this.set(prop, parseInt(this.current(prop), 10) - val + 'px');
+    };
+    /*
+      ---------------------------------
+        Set transition easing function to to `fn` string.
+    
+        When:
+    
+          - null "ease" is used
+          - "in" "ease-in" is used
+          - "out" "ease-out" is used
+          - "in-out" "ease-in-out" is used
+    
+        @param {String} fn
+        @return {Move} for chaining
+        @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.ease = function(fn) {
+      return this._setBrowser('transition-timing-function', coffeefx.ease[fn] || fn || 'ease');
+    };
+    /*
+      ---------------------------------
+      #  * Delay the animation by `n`.
+      #  * If is text is converted in ms (multiply by 1000)
+      #  *
+      #  * @param {Number|String} n
+      #  * @return {Move} for chaining
+      #  * @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.delay = function(n) {
+      n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
+      return this._setBrowser('transition-delay', "" + n + "ms");
     };
     return Coffeefx;
   })();

@@ -71,6 +71,18 @@ map = {
    'padding-left': 'px'
    'padding-right': 'px'
  }
+ 
+ #----------------------------------------#
+ # Easing functions.
+ #----------------------------------------#
+
+ window.coffeefx.ease = {
+   'in': 'ease-in'
+   'out': 'ease-out'
+   'in-out': 'ease-in-out'
+   'snap': 'cubic-bezier(0,1,.5,1)'
+ }
+ 
 
 #----------------------------------------#
 # Coffeefx class, its the manager class 
@@ -470,3 +482,37 @@ window.Coffeefx = class Coffeefx
   sub: (prop, val) ->
     @set(prop, parseInt(@current(prop), 10) - val + 'px')
     
+  ###
+  ---------------------------------
+    Set transition easing function to to `fn` string.
+
+    When:
+
+      - null "ease" is used
+      - "in" "ease-in" is used
+      - "out" "ease-out" is used
+      - "in-out" "ease-in-out" is used
+
+    @param {String} fn
+    @return {Move} for chaining
+    @api public
+  ---------------------------------
+  ###
+
+  ease: (fn) -> @_setBrowser('transition-timing-function',  coffeefx.ease[fn] || fn || 'ease')
+  
+  ###
+  ---------------------------------
+  #  * Delay the animation by `n`.
+  #  * If is text is converted in ms (multiply by 1000)
+  #  *
+  #  * @param {Number|String} n
+  #  * @return {Move} for chaining
+  #  * @api public
+  ---------------------------------
+  ###
+
+  delay: (n) ->
+    n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+    @_setBrowser('transition-delay', "#{n}ms")
+  

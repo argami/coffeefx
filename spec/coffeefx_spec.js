@@ -50,12 +50,6 @@
           cfx.context();
           return (expect(cfx._context.search(cfx.el.className))).toBeGreaterThan(-1);
         });
-        it("should generate a context name using the classname in case select by id an eliminating           the spaces in case to be more than one classname", function() {
-          var cfx;
-          cfx = coffeefx(".classname_noid");
-          cfx.context();
-          return (expect(cfx._context)).toBeDefined;
-        });
         it("should return the same context", function() {
           this.cfx._context = "test_context";
           return (expect(this.cfx.context())).toEqual({});
@@ -125,7 +119,8 @@
           (expect(this.cfx.rotate)).not.toEqual(void 0);
           (expect(this.cfx.origin)).not.toEqual(void 0);
           (expect(this.cfx.perspective)).not.toEqual(void 0);
-          return (expect(this.cfx.transformStyle)).not.toEqual(void 0);
+          (expect(this.cfx.transformStyle)).not.toEqual(void 0);
+          return (expect(this.cfx.ease)).not.toEqual(void 0);
         });
         it("skew should exist in -{brow}-transform with the values 3, 5", function() {
           var brow, _i, _len, _results;

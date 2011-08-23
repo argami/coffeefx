@@ -52,8 +52,19 @@ class animation extend Transition, Transformation
 BIG PROBLEM javascript dont allow multiple inheritance ------ 
 
 Maybe using JSON??
-
- {	"transformation": {
+	name : {
+		class {
+			xxx:yyyyy
+			yyy:xxxxx
+		}
+		@keyframe{
+			from{}
+			to{}
+			step{}
+		}
+	}
+ 
+	{	"transformation": {
 				xxx:yyyyy
 				yyy:xxxxx
 				}
