@@ -100,6 +100,7 @@ window.Coffeefx = class Coffeefx
     @el = @select(selector)
     @_fx = {} #this variable save all the information of the whole effects
     @_context = undefined
+    @callbacks = []
     if @el != undefined
       @transitionDuration() #add the transitionDuration as default
     
@@ -243,9 +244,17 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  end: (context =null) ->
+  end: (event) ->
     self = @
-    @_addCssClass( @_context, @_prepare(context) )
+    
+    switch  typeof event
+      when "function" then @callbacks.push(event)
+      when "Object" then @callbacks.push(event.end) if event instanceof CoffeeFx
+    
+    @callbacks.push(event) if typeof event == "function"
+    @el.addEventListener( 'webkitTransitionEnd', (-> event() for event in self.callbacks ), false );
+    
+    @_addCssClass( @_context, @_prepare() )
     @el.style.cssText = @_prepare()
 
   ##################################################################

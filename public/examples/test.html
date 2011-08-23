@@ -37,7 +37,7 @@
     </style>
   
   <script type="text/coffeescript">
-      window.box = () -> coffeefx('.box').rotate(360).transitionDuration('3s').end()
+      window.box = () -> coffeefx('.box').rotate(360).transitionDuration('3s').end(-> alert("test"))
   </script>
 </head>
 <body>

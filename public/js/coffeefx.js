@@ -41,6 +41,7 @@
       this.el = this.select(selector);
       this._fx = {};
       this._context = void 0;
+      this.callbacks = [];
       if (this.el !== void 0) {
         this.transitionDuration();
       }
@@ -202,13 +203,32 @@
         @api private
       ---------------------------------
       */
-    Coffeefx.prototype.end = function(context) {
+    Coffeefx.prototype.end = function(event) {
       var self;
-      if (context == null) {
-        context = null;
-      }
       self = this;
-      this._addCssClass(this._context, this._prepare(context));
+      switch (typeof event) {
+        case "function":
+          this.callbacks.push(event);
+          break;
+        case "Object":
+          if (event instanceof CoffeeFx) {
+            this.callbacks.push(event.end);
+          }
+      }
+      if (typeof event === "function") {
+        this.callbacks.push(event);
+      }
+      this.el.addEventListener('webkitTransitionEnd', (function() {
+        var event, _i, _len, _ref, _results;
+        _ref = self.callbacks;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          event = _ref[_i];
+          _results.push(event());
+        }
+        return _results;
+      }), false);
+      this._addCssClass(this._context, this._prepare());
       return this.el.style.cssText = this._prepare();
     };
     /*
