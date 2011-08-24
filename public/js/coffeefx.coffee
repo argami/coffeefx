@@ -23,6 +23,16 @@
 #        		.onEnd(callback)
 #        	.end()
 #
+#
+# 
+# context_base {
+#   class {
+#     
+#   }
+#   animation {
+#     
+#   }
+# }
 ##################################################################################
 
 
@@ -140,11 +150,11 @@ window.Coffeefx = class Coffeefx
     @api private
   ---------------------------------
   ###
-  context: (context = null) ->
-    if context != null
-      @_baseContext[context] = {} if @_baseContext[context] == undefined
-      return @_baseContext[context]
-    @_baseContext()
+  context: (context = "cssClass") ->
+    # if context != null
+    #   @_baseContext[context] = {} if @_baseContext[context] == undefined
+    @_baseContext[context]
+    # @_baseContext()
 
   ###
   ---------------------------------

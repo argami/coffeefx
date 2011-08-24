@@ -87,15 +87,9 @@
       */
     Coffeefx.prototype.context = function(context) {
       if (context == null) {
-        context = null;
+        context = "cssClass";
       }
-      if (context !== null) {
-        if (this._baseContext[context] === void 0) {
-          this._baseContext[context] = {};
-        }
-        return this._baseContext[context];
-      }
-      return this._baseContext();
+      return this._baseContext[context];
     };
     /*
       ---------------------------------
