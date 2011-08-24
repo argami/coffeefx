@@ -301,17 +301,10 @@ window.Coffeefx = class Coffeefx
 
   end: (event=undefined) ->
     self = @
-    console.log @
     @then(event) if event
     # @then(-> self.el.removeEventListener( 'webkitTransitionEnd', (event.apply(self) for event in self.callbacks), false))
-    
     @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
-    
-    @_addCssClass( @_context, @_prepare() )
-    @el.style.cssText = @_prepare()
-
-  
-    
+    @el.style.setProperty(prop, value, '') for prop, value of @context()
   
   
   ##################################################################

@@ -270,12 +270,11 @@
       ---------------------------------
       */
     Coffeefx.prototype.end = function(event) {
-      var self;
+      var prop, self, value, _ref, _results;
       if (event == null) {
         event = void 0;
       }
       self = this;
-      console.log(this);
       if (event) {
         this.then(event);
       }
@@ -287,8 +286,13 @@
         }
         return _results;
       }), false);
-      this._addCssClass(this._context, this._prepare());
-      return this.el.style.cssText = this._prepare();
+      _ref = this.context();
+      _results = [];
+      for (prop in _ref) {
+        value = _ref[prop];
+        _results.push(this.el.style.setProperty(prop, value, ''));
+      }
+      return _results;
     };
     /*
       ---------------------------------
