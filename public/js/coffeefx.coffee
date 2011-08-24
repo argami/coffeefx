@@ -260,6 +260,9 @@ window.Coffeefx = class Coffeefx
 
   _child: () -> 
     clone = new Coffeefx(@_selector)
+    # if we dont assign this property we will lost all the 
+    # previous behaviour (then generates a clean instance.)
+    clone.context()[key]  = val for key, val of @context()
     clone.parent = @
     return clone
 

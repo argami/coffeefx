@@ -218,8 +218,13 @@
       ---------------------------------
       */
     Coffeefx.prototype._child = function() {
-      var clone;
+      var clone, key, val, _ref;
       clone = new Coffeefx(this._selector);
+      _ref = this.context();
+      for (key in _ref) {
+        val = _ref[key];
+        clone.context()[key] = val;
+      }
       clone.parent = this;
       return clone;
     };
