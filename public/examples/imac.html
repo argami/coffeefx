@@ -4,25 +4,25 @@
     <script src="../js/coffeefx.js" type="text/javascript" charset="utf-8"></script>
     <script>
       addEventListener('DOMContentLoaded', function(){
-        move('mac')
-          .duration(1000)
+        coffeefx('mac')
+          .transitionDuration(1000)
           .set('opacity', 1)
           .add('left', 500)
           .end();
 
-        move('mac-title')
-          .add('top', 100)
-          .set('opacity', 1)
-          .duration(1200)
-          .delay(500)
-          .end();
-        
-        move('mac-subtitle')
-          .add('left', 100)
-          .set('opacity', 1)
-          .duration('1.2s')
-          .delay('1.5s')
-          .end();
+        // coffeefx('mac-title')
+        //   .add('top', 100)
+        //   .set('opacity', 1)
+        //   .transitionDuration(1200)
+        //   .delay(500)
+        //   .end();
+        // 
+        // coffeefx('mac-subtitle')
+        //   .add('left', 100)
+        //   .set('opacity', 1)
+        //   .transitionDuration('1.2s')
+        //   .delay('1.5s')
+        //   .end();
       }, false);
     </script>
 
@@ -48,8 +48,7 @@
   </head>
 
   <body>
-    <img
-      id="mac-title"   src="http://images.apple.com/imac/images/overview_allinone_title20110426.png">
+    <img id="mac-title"   src="http://images.apple.com/imac/images/overview_allinone_title20110426.png">
     <img id="mac-subtitle" src="http://images.apple.com/imac/images/overview_allinone_subhead20110426.png">
     <img id="mac" src="http://images.apple.com/imac/images/overview_allinone20110426.png">
   </body>

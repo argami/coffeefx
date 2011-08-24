@@ -97,6 +97,7 @@ map = {
 window.Coffeefx = class Coffeefx
   constructor: (selector="") ->
     throw new Error("SelectorEmpty") if selector == ""
+    @_selector = selector
     @el = @select(selector)
     @_fx = {} #this variable save all the information of the whole effects
     @_context = undefined
@@ -236,6 +237,60 @@ window.Coffeefx = class Coffeefx
 
   ###
   ---------------------------------
+    In case of being a chlid return
+    the parent if not return it self
+
+    @param {Number|String} n
+    @return {Move} for chaining
+    @api public
+  ---------------------------------
+  ###
+
+  pop: () -> @parent || @
+
+  ###
+  ---------------------------------
+    _child generate a clean copy of 
+    self with self as parent
+
+    @return {CoffeeFx} 
+    @api public
+  ---------------------------------
+  ###
+
+  _child: () -> 
+    clone = new Coffeefx(@_selector)
+    clone.parent = @
+    return clone
+
+
+  ###
+  ---------------------------------
+    Defer the given `fn` until the animation
+    is complete. `fn` may be one of the following:
+
+     - a function to invoke
+     - an instanceof `Move` to call `.end()`
+     - nothing, to return a clone of this `Move` instance for chaining
+  
+    @param {Function|Move} fn
+    @return {Move} for chaining
+    @api public
+  ---------------------------------
+  ###
+
+  then: (fn=undefined) ->
+    switch  typeof(fn)
+      when "function" then @callbacks.push(fn)
+      when "object"  then @callbacks.push(-> fn.end()) if fn instanceof Coffeefx
+      when 'undefined'
+        child = @_child()
+        @then(child)
+        return child
+    @
+
+  ###
+  ---------------------------------
     end add the context as a css
     class and execute
 
@@ -244,19 +299,21 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  end: (event) ->
+  end: (event=undefined) ->
     self = @
+    console.log @
+    @then(event) if event
+    # @then(-> self.el.removeEventListener( 'webkitTransitionEnd', (event.apply(self) for event in self.callbacks), false))
     
-    switch  typeof event
-      when "function" then @callbacks.push(event)
-      when "Object" then @callbacks.push(event.end) if event instanceof CoffeeFx
-    
-    @callbacks.push(event) if typeof event == "function"
-    @el.addEventListener( 'webkitTransitionEnd', (-> event() for event in self.callbacks ), false );
+    @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
     
     @_addCssClass( @_context, @_prepare() )
     @el.style.cssText = @_prepare()
 
+  
+    
+  
+  
   ##################################################################
   # Transforms
   ##################################################################
@@ -524,4 +581,5 @@ window.Coffeefx = class Coffeefx
   delay: (n) ->
     n = if 'string' == typeof n then parseFloat(n) * 1000 else n
     @_setBrowser('transition-delay', "#{n}ms")
+
   

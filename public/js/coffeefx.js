@@ -38,6 +38,7 @@
       if (selector === "") {
         throw new Error("SelectorEmpty");
       }
+      this._selector = selector;
       this.el = this.select(selector);
       this._fx = {};
       this._context = void 0;
@@ -196,6 +197,71 @@
     };
     /*
       ---------------------------------
+        In case of being a chlid return
+        the parent if not return it self
+    
+        @param {Number|String} n
+        @return {Move} for chaining
+        @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.pop = function() {
+      return this.parent || this;
+    };
+    /*
+      ---------------------------------
+        _child generate a clean copy of 
+        self with self as parent
+    
+        @return {CoffeeFx} 
+        @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype._child = function() {
+      var clone;
+      clone = new Coffeefx(this._selector);
+      clone.parent = this;
+      return clone;
+    };
+    /*
+      ---------------------------------
+        Defer the given `fn` until the animation
+        is complete. `fn` may be one of the following:
+    
+         - a function to invoke
+         - an instanceof `Move` to call `.end()`
+         - nothing, to return a clone of this `Move` instance for chaining
+      
+        @param {Function|Move} fn
+        @return {Move} for chaining
+        @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.then = function(fn) {
+      var child;
+      if (fn == null) {
+        fn = void 0;
+      }
+      switch (typeof fn) {
+        case "function":
+          this.callbacks.push(fn);
+          break;
+        case "object":
+          if (fn instanceof Coffeefx) {
+            this.callbacks.push(function() {
+              return fn.end();
+            });
+          }
+          break;
+        case 'undefined':
+          child = this._child();
+          this.then(child);
+          return child;
+      }
+      return this;
+    };
+    /*
+      ---------------------------------
         end add the context as a css
         class and execute
     
@@ -205,26 +271,19 @@
       */
     Coffeefx.prototype.end = function(event) {
       var self;
-      self = this;
-      switch (typeof event) {
-        case "function":
-          this.callbacks.push(event);
-          break;
-        case "Object":
-          if (event instanceof CoffeeFx) {
-            this.callbacks.push(event.end);
-          }
+      if (event == null) {
+        event = void 0;
       }
-      if (typeof event === "function") {
-        this.callbacks.push(event);
+      self = this;
+      console.log(this);
+      if (event) {
+        this.then(event);
       }
       this.el.addEventListener('webkitTransitionEnd', (function() {
-        var event, _i, _len, _ref, _results;
-        _ref = self.callbacks;
+        var _results;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          event = _ref[_i];
-          _results.push(event());
+        while (self.callbacks.length > 0) {
+          _results.push(self.callbacks.shift().apply(self));
         }
         return _results;
       }), false);

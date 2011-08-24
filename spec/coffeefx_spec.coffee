@@ -17,6 +17,9 @@ describe "coffeefx", ->
   it "throw a exception if is not a selector", ->
     expect(-> coffeefx()).toThrow new Error("SelectorEmpty")
     
+  it "should save the selector", ->
+   (expect coffeefx("#test")._selector).toEqual "#test"
+
   it "should exist a select function", ->
    (expect typeof coffeefx("#test").select).toEqual "function"
 
