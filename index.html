@@ -1,302 +1,554 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-  <title>CoffeeScript Test</title>
-  <script src="coffee-script.js"></script>
-  <script src="coffeefx.js"></script>
-  <style>
-    body {
-      margin: 30px;
-      font-family: Menlo, Monaco, monospace;
-      font-size:12px;
-    }
-    
+  <head>
+    <title>CoffeeFx - CSS3 animation framework for JavaScript</title>
+    <script src="coffeefx.js" type="text/javascript" charset="utf-8"></script>
+    <script>
 
-    
-    
-    #back{
-      z-index:-1; 
-      left:140; 
-      top:180;
-      width:164px;
-      height:160px;
-      position:absolute;
-      background-color:lightgray;
-      border: 1px black solid;
-      border-radius: 80px;
-      
-      
-    }
+      function $(selector) {
+        return document.querySelectorAll(selector)[0];
+      }
 
-    #seg{
-      z-index:1; 
-      left:200; 
-      top:200;
-      width:164px;
-      height:160px;
-      position:absolute;
-    }
+      function play(example, fn) {
+        $('#example-' + example + ' .play').addEventListener('click', function(e){
+          e.preventDefault();
+          fn();
+        }, false);
+      }
 
-    #seg-in{
-      z-index:1; 
-      left:200; 
-      top:204;
-      margin-top:3px;
-      width:80px;
-      height:77px;
-      position:absolute;
-      border-right: 2px black solid;
-      border-top-left-radius:1px;
-      border-top-right-radius:1px;
-    }
+      addEventListener('DOMContentLoaded', function(){
+        // example 1
+        play(1, function(){
+          coffeefx('#example-1 .box')
+            .set('margin-left', 200)
+            .end();
+        });
 
+        // example 2
+        play(2, function(){
+          coffeefx('#example-2 .box')
+            .add('margin-left', 200)
+            .end();
+        });
 
-    
-    #min{
-      z-index:2; 
-      margin-left:10px; 
-      margin-top:10px;
-      width:144px;
-      height:140px;
-      position:absolute;
-    }
+        // example 3
+        play(3, function(){
+          coffeefx('#example-3 .box')
+            .sub('margin-left', 100)
+            .end();
+        });
 
-    #min-in{
-      z-index:2; 
-      width:69px;
-      height:69px;
-      position:absolute;
-      border-right: 4px blue solid;
-      border-top-left-radius:1px;
-      border-top-right-radius:1px;
-    }
+        // example 4
+        var e4 = coffeefx('#example-4 .box');
+        play(4, function(){
+          e4.rotate(140).end();
+        });
 
+        // example 5
+        play(5, function(){
+          coffeefx('#example-5 .box')
+            .set('background-color', 'blue')
+            .transitionDuration('2s')
+            .end();
+        });
 
-    #hour{
-      z-index:3; 
-      margin-left:20px; 
-      margin-top:20px;
-      width:124px;
-      height:120px;
-      position:absolute;
-    }
+        // example 6
+        play(6, function(){
+          coffeefx('#example-6 .box')
+            .translate(300, 80)
+            .end();
+        });
 
-    #hour-in{
-      z-index:3; 
-      width:58px;
-      height:58px;
-      position:absolute;
-      border-right: 6px gray solid;
-      border-top-left-radius:2px;
-      border-top-right-radius:2px;
-    }
+        // example 7
+        play(7, function(){
+          coffeefx('#example-7 .box')
+            .x(300)
+            .y(20)
+            .end();
+        });
 
-    #point{
-      z-index:4; 
-      width:10px;
-      height:10px;
-      margin-left:76px; 
-      margin-top:76px;
-      background-color: black;
-      position:absolute;
-      border-radius: 10px;
-    }
+        // example 8
+        play(8, function(){
+          coffeefx('#example-8 .box')
+            .x(300)
+            .skew(50)
+            .set('height', 20)
+            .end();
+        });
 
-    .seg {
-      width:300px;
-      margin-left:200px;
-      position:absolute;
-      background-color:lightgray;
-      padding-left:10px;
-      border: 1px black solid;
-      
-    }
+        // example 9
+        play(9, function(){
+          coffeefx('#example-9 .box')
+            .scale(3)
+            .end();
+        });
 
-    .min {
-      width:300px;
-      margin-left:520px;
-      position:absolute;
-      padding-left:10px;
-      border: 1px black solid;
-    }
+        // example 10
+        play(10, function(){
+          coffeefx('#example-10 .box1').x(400).end();
+          coffeefx('#example-10 .box2').ease('in').x(400).end();
+          coffeefx('#example-10 .box3').ease('out').x(400).end();
+          coffeefx('#example-10 .box4').ease('in-out').x(400).end();
+          coffeefx('#example-10 .box5').ease('snap').x(400).end();
+          coffeefx('#example-10 .box6').ease('cubic-bezier(0,1,1,0)').x(400).end();
 
-    .hour {
-      width:300px;
-      margin-left:840px;
-      position:absolute;
-      background-color:lightgray;
-      padding-left:10px;
-      border: 1px black solid;
-      
-    }
-    
-    .html {
-      width:300px;
-      margin-left:200px;
-      margin-top:300px;
-      position:absolute;
-      padding-left:10px;
-      border: 1px black solid;
-      
-      
-    }
-    
-    #remember{
-      margin-top:200px;
-      position:absolute;
-      
-    }
-    
-    </style>
-  
-  <script type="text/coffeescript">
-        date = new Date()
-        segs = date.getSeconds()
-        deg = segs * 6
+          setTimeout(function(){
+            coffeefx('#example-10 .box1').x(0).end();
+            coffeefx('#example-10 .box2').x(0).end();
+            coffeefx('#example-10 .box3').x(0).end();
+            coffeefx('#example-10 .box4').x(0).end();
+            coffeefx('#example-10 .box5').x(0).end();
+            coffeefx('#example-10 .box6').x(0).end();
+          }, 1200);
+        });
 
-        coffeefx('seg')
-              .timing('linear')
-              .iteration('infinite')
-              .duration('60s')
-                .from()
-                  .rotate(deg)
-                  .pop()
-                .to()
-                  .rotate(360 + deg)
-                .pop()
-            .end()
-            
-        min = date.getMinutes()
-        deg = min * 6
+        play(11, function(){
+          coffeefx('#example-11 .box')
+            .set('background-color', 'red')
+            .transitionDuration(1000)
+            .end(function(){
+              coffeefx('#example-11 .box')
+                .set('background-color', 'white')
+                .end();
+            });
+        });
 
-        coffeefx('min')
-              .timing('linear')
-              .iteration('infinite')
-              .duration('3600s')
-                .from()
-                  .rotate(deg)
-                  .pop()
-                .to()
-                  .rotate(360 + deg)
-                .pop()
-            .end()
+        // example 12
+        play(12, function(){
+          coffeefx('#example-12 .box')
+            .set('background-color', 'blue')
+            .delay('2s')
+            .end();
+        });
 
-        hour = date.getHours()
-        deg = hour * 30
-        
-        coffeefx('hour')
-              .timing('linear')
-              .iteration('infinite')
-              .duration("86400s")
-                .from()
-                  .rotate(deg)
-                  .pop()
-                .to()
-                  .rotate(360 + deg)
-                .pop()
-            .end()
-        
-      
-  </script>
-</head>
-<body>
-  <h1>Coffeefx</h1>
-  <div style="position:relative">
-    <div id="seg" ><div id="seg-in" ></div></div> 
-    <div id="min" ><div id="min-in" ></div></div> 
-    <div id="hour" ><div id="hour-in" ></div></div> 
-    <div id="point" ></div> 
-    <div id="back" ></div>
-  </div>
-  
-  <div id="remember">
-    CSS3 no JavaScript just GPU
-  </div>
-
-  <div class="legend seg">
-    <h3>Seconds</h3>
-    <pre>
-      date = new Date()
-      segs = date.getSeconds()
-      deg = segs * 6
-
-      coffeefx('seg')
-            .timing('linear')
-            .iteration('infinite')
-            .duration('60s')
-              .from()
-                .rotate(deg)
-                .pop()
-              .to()
-                .rotate(360 + deg)
-              .pop()
-          .end()
-  </pre>
-  </div>
-  <div class="legend min">
-    <h3>Minutes</h3>
-    
-    <pre>
-      min = date.getMinutes()
-       deg = min * 6
-
-       coffeefx('min')
-             .timing('linear')
-             .iteration('infinite')
-             .duration('3600s')
-               .from()
-                 .rotate(deg)
-                 .pop()
-               .to()
-                 .rotate(360 + deg)
-               .pop()
-           .end()
-           
-    </pre>
-  </div>
-  <div class="legend hour">
-    <h3>Minutes</h3>
-    <pre>
-      hour = date.getHours()
-      deg = hour * 30
-      
-      coffeefx('hour')
-            .timing('linear')
-            .iteration('infinite')
-            .duration("86400s")
-              .from()
-                .rotate(deg)
-                .pop()
-              .to()
-                .rotate(360 + deg)
-              .pop()
-          .end()
+        // example 13
+        play(13, function(){
+          var coffeefxBack = coffeefx('#example-13 .box')
+            .set('background-color', 'white')
+            .x(0);
           
-      </pre>
-  </div>
-  <div class="legend html">
-    <h3>Html</h3>
-    <pre>
-      &lt;!-- Seconds --&gt;
-      &lt;div id="seg" &gt;
-        &lt;div id="seg-in"&gt;&lt;/div&gt;
-      &lt;/div&gt; 
+          coffeefx('#example-13 .box')
+            .set('background-color', 'red')
+            .x(500)
+            .then(coffeefxBack)
+            .end();
 
-      &lt;!-- Minutes --&gt;
-      &lt;div id="min" &gt;
-        &lt;div id="min-in"&gt;&lt;/div&gt;
-      &lt;/div&gt; 
+          coffeefx('#example-13 .box2')
+            .set('background-color', 'red')
+            .x(500)
+            .scale(.5)
+            .rotate(60)
+              .then()
+                .rotate(30)
+                .scale(1.5)
+                .set('border-radius', 5)
+                .set('background-color', 'white')
+                .then()
+                  .set('opacity', 0)
+                  .pop()
+                .pop()
+            .end();
+        });
+      }, false);
+    </script>
 
-      &lt;!-- Hours --&gt;
-      &lt;div id="hour" &gt;
-        &lt;div id="hour-in"&gt;&lt;/div&gt;
-      &lt;/div&gt; 
+    <style>
+      body {
+        padding: 50px;
+        font: 14px/1.5 "helvetica neue", helvetica, arial, sans-serif;
+        color: #8b8b8b;
+      }
+      h1, h2, h3 {
+        font-size: 33px;
+        font-weight: normal;
+        color: #333;
+        -webkit-font-smoothing: antialiased;
+      }
+      h2 {
+        display: none;
+        font-size: 33px;
+      }
+      h3 {
+        padding: 5px 0;
+        font-size: 18px;
+        border-bottom: 3px solid #eee;
+      }
+      .box {
+        margin: 5px;
+        border: 1px solid #888;
+        font-size: 11px;
+        text-align: center;
+        line-height: 50px;
+      }
+      .small {
+        width: 50px;
+        height: 50px;
+      }
+      a {
+        color: #00B5E2;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .sandbox {
+        margin: 10px 0;
+        padding: 5px;
+        border: 1px solid #eee;
+      }
+      .source {
+        font-family: monaco, monospace;
+        font-size: 12px;
+        color: #999;
+      }
+      .example p {
+        color: #333;
+      }
+      .example p code {
+        color: #999;
+        padding: 2px 5px;
+        border: 1px solid #eee;
+        -webkit-border-radius: 3px;
+      }
+      #example-1 .box,
+      #example-2 .box,
+      #example-3 .box {
+        margin-left: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CoffeeFx</h1>
+    <p>CoffeeFx is a small JavaScript library making CSS3 backed animation
+    extremely simple and elegant.</p>
 
-      &lt;!-- Decoration --&gt;
-      &lt;div id="point" &gt;&lt;/div&gt; 
-      &lt;div id="back" &gt;&lt;/div&gt;
-    </pre>
-  </div>
-</body>
+    <h2>Examples</h2>
+
+    <h3> Watch our clock!!! <a href="clock.html" id="" title="clock">clock</a> </h3>
+
+
+
+
+    <a href="http://github.com/visionmedia/coffeefx.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://d3nwyuy0nl342s.cloudfront.net/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+
+    <div id="examples">
+      <div id="example-1" class="example">
+        <h3>CoffeeFx#set(prop, val)</h3>
+        <p>Set <em>prop</em> to <em>val</em>.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-1 .box')
+  .set('margin-left', 200)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-2" class="example">
+        <h3>CoffeeFx#add(prop, val)</h3>
+        <p>Increment <em>prop</em> by <em>val</em>, where <em>val</em>
+          is an Number (click several times).</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-2 .box')
+  .add('margin-left', 200)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-3" class="example">
+        <h3>CoffeeFx#sub(prop, val)</h3>
+        <p>Decrement <em>prop</em> by <em>val</em>, where <em>val</em>
+          is an Number (click several times).</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-3 .box')
+  .sub('margin-left', 100)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-4" class="example">
+        <h3>CoffeeFx#rotate(deg)</h3>
+        <p>Rotate by <em>deg</em>.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-4 .box')
+  .rotate(140)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-5" class="example">
+        <h3>CoffeeFx#duration(n)</h3>
+        <p>Set animation duration to <em>n</em> which is a 
+          Number or a string such as "4s".</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-5 .box')
+  .set('background-color', 'blue')
+  .transitionDuration('2s')
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-6" class="example">
+        <h3>CoffeeFx#translate(x[, y])</h3>
+        <p>Translate <em>x</em> and optionally <em>y</em> axis. Aliased as <code>CoffeeFx#to(x[, y])</code>.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-6 .box')
+  .translate(300, 80)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-7" class="example">
+        <h3>CoffeeFx#x(n) / CoffeeFx#y(n)</h3>
+        <p>Translate <em>x</em> or <em>y</em> axis. Aliased by <code>CoffeeFx#translateX(n)</code> and <code>CoffeeFx#translateY(n)</code>.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-7 .box')
+  .x(300)
+  .y(20)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-8" class="example">
+        <h3>CoffeeFx#skew(x[, y])</h3>
+        <p>Skew <em>x</em>, and optionally <em>y</em>. <code>CoffeeFx#skewX(n)</code> and <code>CoffeeFx#skewY(n)</code> are also available.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-8 .box')
+  .x(300)
+  .skew(50)
+  .set('height', 20)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-9" class="example">
+        <h3>CoffeeFx#scale(x[, y])</h3>
+        <p>Scale the <em>x</em>, and optionally <em>y</em> axis. <code>CoffeeFx#scaleX(n)</code> and <code>CoffeeFx#scaleY(n)</code> are also available.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-9 .box')
+  .scale(3)
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-10" class="example">
+        <h3>CoffeeFx#ease(fn)</h3>
+        <p>Use the given easing <code>fn</code>.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box box1 small">default</div>
+          <div class="box box2 small">in</div>
+          <div class="box box3 small">out</div>
+          <div class="box box4 small">in-out</div>
+          <div class="box box5 small">snap</div>
+          <div class="box box6 small">(0,1,1,0)</div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-10 .box1').x(400).end();
+coffeefx('#example-10 .box2').ease('in').x(400).end();
+coffeefx('#example-10 .box3').ease('out').x(400).end();
+coffeefx('#example-10 .box4').ease('in-out').x(400).end();
+coffeefx('#example-10 .box5').ease('snap').x(400).end();
+coffeefx('#example-10 .box6').ease('cubic-bezier(0,1,1,0)').x(400).end();
+
+setTimeout(function(){
+  coffeefx('#example-10 .box1').x(0).end();
+  coffeefx('#example-10 .box2').x(0).end();
+  coffeefx('#example-10 .box3').x(0).end();
+  coffeefx('#example-10 .box4').x(0).end();
+  coffeefx('#example-10 .box5').x(0).end();
+  coffeefx('#example-10 .box6').x(0).end();
+}, 1200);
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-11" class="example">
+        <h3>CoffeeFx#end([fn])</h3>
+        <p>The <code>end()</code> method triggers the animation
+          to play, optionally invoking the callback <em>fn</em> when complete.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-11 .box')
+  .set('background-color', 'red')
+  .transitionDuration(1000)
+  .end(function(){
+    coffeefx('#example-11 .box')
+      .set('background-color', 'white')
+      .end();
+  });
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-12" class="example">
+        <h3>CoffeeFx#delay(n)</h3>
+        <p>Set animation delay to <em>n</em> which is a 
+          Number or a string such as "4s".</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+        </div>
+        <pre class="source">
+          <code>
+coffeefx('#example-12 .box')
+  .set('background-color', 'blue')
+  .delay('2s')
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div id="example-13" class="example">
+        <h3>CoffeeFx#then([fn])</h3>
+        <p>Defer an action such as invoking a <em>fn</em>,
+          <code>end()</code>ing the given <code>CoffeeFx</code> instance,
+          or returning a clone for chaining. The <code>CoffeeFx#pop()</code> method is used to return the current <code>CoffeeFx</code> instance's parent in the chain.</p>
+        <a href="#" class="play">Play</a>
+        <div class="sandbox">
+          <div class="box small"></div>
+          <div class="box box2 small"></div>
+        </div>
+        <pre class="source">
+          <code>
+var coffeefxBack = coffeefx('#example-13 .box')
+  .set('background-color', 'white')
+  .x(0);
+
+coffeefx('#example-13 .box')
+  .set('background-color', 'red')
+  .x(500)
+  .then(coffeefxBack)
+  .end();
+
+coffeefx('#example-13 .box2')
+  .set('background-color', 'red')
+  .x(500)
+  .scale(.5)
+  .rotate(60)
+    .then()
+      .rotate(30)
+      .scale(1.5)
+      .set('border-radius', 5)
+      .set('background-color', 'white')
+      .then()
+        .set('opacity', 0)
+        .pop()
+      .pop()
+  .end();
+          </code>
+        </pre>
+      </div>
+
+      <div class="example">
+        <h3>coffeefx.select(selector)</h3>
+        <p>This function is used throughout coffeefx to select elements. For
+          example if we wanted to utilize jQuery, we could re-define
+          this function as shown below.</p>
+        <pre class="source">
+          <code>
+coffeefx.select = function(selector){
+  return $(selector).get(0);
+};
+          </code>
+        </pre>
+      </div>
+
+      <div class="example">
+        <h3>coffeefx.defaults</h3>
+        <p>Defaults used throughout CoffeeFx, simply re-define to apply a new default.</p>
+        <pre class="source">
+          <code>
+coffeefx.defaults = {
+  duration: 500
+};
+          </code>
+        </pre>
+      </div>
+
+      <div class="example">
+        <h3>coffeefx.ease</h3>
+        <p>Easing function map, used by <code>CoffeeFx#ease()</code> to
+          allow for <code>coffeefx('foo').ease('in')</code> etc.</p>
+        <pre class="source">
+          <code>
+coffeefx.ease = {
+    'in': 'ease-in'
+  , 'out': 'ease-out'
+  , 'in-out': 'ease-in-out'
+  , 'snap': 'cubic-bezier(0,1,.5,1)'
+};
+          </code>
+        </pre>
+      </div>
+
+      <div class="example">
+        <h3>coffeefx.version</h3>
+        <p>The library version in the form "MAJOR.MINOR.PATCH".</p>
+        <pre class="source">
+          <code>
+coffeefx.version = "n.n.n";
+          </code>
+        </pre>
+      </div>
+
+    </div>
+  </body>
 </html>
