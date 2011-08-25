@@ -1,11 +1,5 @@
 (function() {
   var Coffeefx, current, map;
-  var __indexOf = Array.prototype.indexOf || function(item) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      if (this[i] === item) return i;
-    }
-    return -1;
-  };
   window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-'];
   window.coffeefx = function(selector) {
     return new Coffeefx(selector);
@@ -37,7 +31,6 @@
     'snap': 'cubic-bezier(0,1,.5,1)'
   };
   window.Coffeefx = Coffeefx = (function() {
-    var animation_params;
     function Coffeefx(selector) {
       if (selector == null) {
         selector = "";
@@ -52,7 +45,7 @@
       this._baseContext();
       this.callbacks = [];
       if (this.el !== void 0) {
-        this.transitionDuration();
+        this.duration();
       }
     }
     Coffeefx.prototype.select = function(selector) {
@@ -162,9 +155,20 @@
       ---------------------------------
       */
     Coffeefx.prototype._prepare = function() {
-      var text;
-      text = JSON.stringify(this.context());
-      return text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";");
+      var key, keyframe, text, val, value, _ref;
+      text = "";
+      keyframe = "";
+      _ref = this._baseContext();
+      for (key in _ref) {
+        value = _ref[key];
+        val = JSON.stringify(value).replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";").replace(/,/g, "; ");
+        if (key === "class") {
+          text += "." + this._context + " { " + val + " }";
+        } else {
+          keyframe += "" + key + " { " + val + " }";
+        }
+      }
+      return text += " @-webkit-keyframes " + this._context + "  { " + keyframe + " }";
     };
     /*
       ---------------------------------
@@ -208,8 +212,8 @@
       */
     Coffeefx.prototype.pop = function() {
       var _ref;
-      if ((this.parent != null) && (_ref = this._context, __indexOf.call(this.animation_params, _ref) >= 0)) {
-        this.parent._baseContext()[this._context] = context();
+      if ((this.parent != null) && ((_ref = this._context) === 'from' || _ref === 'to')) {
+        this.parent._baseContext()[this._context] = this.context();
       }
       return this.parent || this;
     };
@@ -280,7 +284,7 @@
       ---------------------------------
       */
     Coffeefx.prototype.end = function(event) {
-      var prop, self, value, _ref, _results;
+      var prop, self, value, _ref;
       if (event == null) {
         event = void 0;
       }
@@ -288,21 +292,37 @@
       if (event) {
         this.then(event);
       }
-      this.el.addEventListener('webkitTransitionEnd', (function() {
-        var _results;
-        _results = [];
-        while (self.callbacks.length > 0) {
-          _results.push(self.callbacks.shift().apply(self));
+      if (this.context()['-webkit-animation-name'] === void 0) {
+        this.el.addEventListener('webkitTransitionEnd', (function() {
+          var _results;
+          _results = [];
+          while (self.callbacks.length > 0) {
+            _results.push(self.callbacks.shift().apply(self));
+          }
+          return _results;
+        }), false);
+        _ref = this.context();
+        for (prop in _ref) {
+          value = _ref[prop];
+          this.el.style.setProperty(prop, value, '');
         }
-        return _results;
-      }), false);
-      _ref = this.context();
-      _results = [];
-      for (prop in _ref) {
-        value = _ref[prop];
-        _results.push(this.el.style.setProperty(prop, value, ''));
+      } else {
+        this.el.addEventListener('webkitAnimationEnd', (function() {
+          var _results;
+          _results = [];
+          while (self.callbacks.length > 0) {
+            _results.push(self.callbacks.shift().apply(self));
+          }
+          return _results;
+        }), false);
+        this._addCssClass(this._context, this._prepare());
+        this.el.style.webkitAnimationName = '';
+        window.setTimeout((function() {
+          return self.el.style.webkitAnimationName = self._context;
+        }), 0);
+        this.el.className += " " + this._context;
       }
-      return _results;
+      return this;
     };
     /*
       ---------------------------------
@@ -576,7 +596,6 @@
       n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this._setBrowser('transition-delay', "" + n + "ms");
     };
-    animation_params = ['from', 'to'];
     Coffeefx.prototype._clone = function(prop) {
       var child;
       child = new Coffeefx(this._selector);
@@ -585,9 +604,43 @@
       child._baseContext();
       return child;
     };
-    Coffeefx.prototype.from = function() {
+    Coffeefx.prototype.setAnimationName = function() {
+      return this._setBrowser('animation-name', this._context, false);
+    };
+    Coffeefx.prototype.step = function(step) {
       var child;
-      return child = this._clone("from");
+      this.setAnimationName();
+      return child = this._clone(step);
+    };
+    Coffeefx.prototype.from = function() {
+      return this.step('from');
+    };
+    Coffeefx.prototype.to = function() {
+      return this.step('to');
+    };
+    Coffeefx.prototype.duration = function(n) {
+      if (n == null) {
+        n = 500;
+      }
+      this.transitionDuration(n);
+      return this.animationDuration(n);
+    };
+    Coffeefx.prototype.animationDuration = function(n) {
+      if (n == null) {
+        n = 500;
+      }
+      console.log(n);
+      n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
+      return this._setBrowser('animation-duration', "" + n + "ms", false);
+    };
+    Coffeefx.prototype.iteration = function(n) {
+      return this._setBrowser('animation-iteration-count', n, false);
+    };
+    Coffeefx.prototype.timing = function(fn) {
+      if (fn == null) {
+        fn = "linear";
+      }
+      return this._setBrowser('animation-timing-function', fn, false);
     };
     return Coffeefx;
   })();

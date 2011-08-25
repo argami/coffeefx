@@ -120,7 +120,7 @@ window.Coffeefx = class Coffeefx
     @_baseContext()
     @callbacks = []
     if @el != undefined
-      @transitionDuration() #add the transitionDuration as default
+      @duration() #add the transitionDuration as default
     
   select: (selector) ->
     document.getElementById(selector) || document.querySelectorAll(selector)[0]
@@ -214,8 +214,20 @@ window.Coffeefx = class Coffeefx
   ###
 
   _prepare: () -> 
-    text = JSON.stringify @context()
-    text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
+    text = ""
+    keyframe = ""
+    for key, value of @_baseContext()
+      # console.log JSON.stringify value
+      val = JSON.stringify(value).replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";").replace(/,/g,"; ")
+      if key == "class"
+        text += ".#{@_context} { #{val} }"
+      else
+        keyframe += "#{key} { #{val} }"
+    
+    text += " @-webkit-keyframes #{@_context}  { #{keyframe} }"
+
+    # text = JSON.stringify(@context())
+    # text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
 
 
   ###
@@ -261,8 +273,7 @@ window.Coffeefx = class Coffeefx
   ###
 
   pop: () -> 
-    if @parent? and @_context in @animation_params
-      @parent._baseContext()[@_context] = context()
+    @parent._baseContext()[@_context] = @context() if @parent? and @_context in ['from', 'to']
     @parent || @    
         
     #original statement just for using then
@@ -325,9 +336,19 @@ window.Coffeefx = class Coffeefx
   end: (event=undefined) ->
     self = @
     @then(event) if event
-    # @then(-> self.el.removeEventListener( 'webkitTransitionEnd', (event.apply(self) for event in self.callbacks), false))
-    @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
-    @el.style.setProperty(prop, value, '') for prop, value of @context()
+
+    #transformation
+    if @context()['-webkit-animation-name'] == undefined
+      @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
+      @el.style.setProperty(prop, value, '') for prop, value of @context()
+    else
+      @el.addEventListener( 'webkitAnimationEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
+      @_addCssClass(@_context, @_prepare())
+      @el.style.webkitAnimationName = ''; 
+      window.setTimeout( (-> self.el.style.webkitAnimationName = self._context), 0);
+      @el.className += " #{@_context}"
+    
+    @
   
   
   ##################################################################
@@ -601,7 +622,7 @@ window.Coffeefx = class Coffeefx
   ##################################################################
   # Animation
   ##################################################################
-  animation_params = ['from', 'to']
+  
   
   _clone: (prop) ->
     child = new Coffeefx(@_selector)
@@ -611,8 +632,28 @@ window.Coffeefx = class Coffeefx
     child
     
   
-  from: () -> child = @_clone("from")
+  setAnimationName: () -> @_setBrowser('animation-name', @_context, false)
   
+  step: (step) ->
+    @setAnimationName()
+    child = @_clone(step)
+
+  from: () -> @step('from')
+  to: () -> @step('to')
+  
+  duration: (n=500) ->
+    @transitionDuration(n)
+    @animationDuration(n)
+  
+  animationDuration: (n=500) ->
+    console.log n
+    n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+    @_setBrowser('animation-duration', "#{n}ms", false)
+  
+  iteration: (n) -> @_setBrowser('animation-iteration-count', n, false)
+  
+  timing: (fn = "linear") ->
+    @_setBrowser('animation-timing-function', fn, false)
 
 
 

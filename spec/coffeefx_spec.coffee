@@ -182,12 +182,14 @@ describe "coffeefx", ->
         
     describe "animations", ->
       it "should exist all the animations functions functions", ->
-        # (expect @cfx.animation).not.toEqual undefined
         (expect @cfx.from).not.toEqual undefined
-        # (expect @cfx.to).not.toEqual undefined
+        (expect @cfx.to).not.toEqual undefined
       
       it "should generate a new context in the _fx (animations)", ->
         (expect @cfx.from()._context).toEqual 'from'
+
+      it "should generate a new context in the _fx (animations)", ->
+        (expect @cfx.to()._context).toEqual 'to'
 
       # it "should generate a new context in the _fx (animations)", ->
       #   @cfx.from()

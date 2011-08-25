@@ -328,10 +328,14 @@
       });
       return describe("animations", function() {
         it("should exist all the animations functions functions", function() {
-          return (expect(this.cfx.from)).not.toEqual(void 0);
+          (expect(this.cfx.from)).not.toEqual(void 0);
+          return (expect(this.cfx.to)).not.toEqual(void 0);
+        });
+        it("should generate a new context in the _fx (animations)", function() {
+          return (expect(this.cfx.from()._context)).toEqual('from');
         });
         return it("should generate a new context in the _fx (animations)", function() {
-          return (expect(this.cfx.from()._context)).toEqual('from');
+          return (expect(this.cfx.to()._context)).toEqual('to');
         });
       });
     });
