@@ -346,8 +346,7 @@ window.Coffeefx = class Coffeefx
       @_addCssClass(@_context, @_prepare())
       @el.style.webkitAnimationName = ''; 
       window.setTimeout( (-> self.el.style.webkitAnimationName = self._context), 0);
-      @el.className += " #{@_context}"
-    
+      @el.className = " #{@_context}"
     @
   
   

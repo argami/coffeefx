@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>CoffeeScript Test</title>
+  <script src="../../../others/coffee-script.js"></script>
+  <script src="../js/coffeefx.js"></script>
+  <style>
+    body {
+      margin: 30px;
+      font-family: Menlo, Monaco, monospace;
+      font-size:12px;
+    }
+    
+
+    
+    
+    #back{
+      z-index:-1; 
+      left:140; 
+      top:180;
+      width:164px;
+      height:160px;
+      position:absolute;
+      background-color:lightgray;
+      border: 1px black solid;
+      border-radius: 80px;
+      
+      
+    }
+
+    #seg{
+      z-index:1; 
+      left:200; 
+      top:200;
+      width:164px;
+      height:160px;
+      position:absolute;
+    }
+
+    #seg-in{
+      z-index:1; 
+      left:200; 
+      top:204;
+      margin-top:3px;
+      width:80px;
+      height:77px;
+      position:absolute;
+      border-right: 2px black solid;
+      border-top-left-radius:1px;
+      border-top-right-radius:1px;
+    }
+
+
+    
+    #min{
+      z-index:2; 
+      margin-left:10px; 
+      margin-top:10px;
+      width:144px;
+      height:140px;
+      position:absolute;
+    }
+
+    #min-in{
+      z-index:2; 
+      width:69px;
+      height:69px;
+      position:absolute;
+      border-right: 4px blue solid;
+      border-top-left-radius:1px;
+      border-top-right-radius:1px;
+    }
+
+
+    #hour{
+      z-index:3; 
+      margin-left:20px; 
+      margin-top:20px;
+      width:124px;
+      height:120px;
+      position:absolute;
+    }
+
+    #hour-in{
+      z-index:3; 
+      width:58px;
+      height:58px;
+      position:absolute;
+      border-right: 6px gray solid;
+      border-top-left-radius:2px;
+      border-top-right-radius:2px;
+    }
+
+    #point{
+      z-index:4; 
+      width:10px;
+      height:10px;
+      margin-left:76px; 
+      margin-top:76px;
+      background-color: black;
+      position:absolute;
+      border-radius: 10px;
+    }
+
+    .seg {
+      width:300px;
+      margin-left:200px;
+      position:absolute;
+      background-color:lightgray;
+      padding-left:10px;
+      border: 1px black solid;
+      
+    }
+
+    .min {
+      width:300px;
+      margin-left:520px;
+      position:absolute;
+      padding-left:10px;
+      border: 1px black solid;
+    }
+
+    .hour {
+      width:300px;
+      margin-left:840px;
+      position:absolute;
+      background-color:lightgray;
+      padding-left:10px;
+      border: 1px black solid;
+      
+    }
+    
+    .html {
+      width:300px;
+      margin-left:200px;
+      margin-top:300px;
+      position:absolute;
+      padding-left:10px;
+      border: 1px black solid;
+      
+      
+    }
+    
+    #remember{
+      margin-top:200px;
+      position:absolute;
+      
+    }
+    </style>
+  
+  <script type="text/coffeescript">
+        date = new Date()
+        segs = date.getSeconds()
+        deg = segs * 6
+
+        coffeefx('seg')
+              .timing('linear')
+              .iteration('infinite')
+              .duration('60s')
+                .from()
+                  .rotate(deg)
+                  .pop()
+                .to()
+                  .rotate(360 + deg)
+                .pop()
+            .end()
+            
+        min = date.getMinutes()
+        deg = min * 6
+
+        coffeefx('min')
+              .timing('linear')
+              .iteration('infinite')
+              .duration('3600s')
+                .from()
+                  .rotate(deg)
+                  .pop()
+                .to()
+                  .rotate(360 + deg)
+                .pop()
+            .end()
+
+        hour = date.getHours()
+        deg = hour * 30
+        
+        coffeefx('hour')
+              .timing('linear')
+              .iteration('infinite')
+              .duration("86400s")
+                .from()
+                  .rotate(deg)
+                  .pop()
+                .to()
+                  .rotate(360 + deg)
+                .pop()
+            .end()
+        
+      
+  </script>
+</head>
+<body>
+  <div style="position:relative">
+    <div id="seg" ><div id="seg-in" ></div></div> 
+    <div id="min" ><div id="min-in" ></div></div> 
+    <div id="hour" ><div id="hour-in" ></div></div> 
+    <div id="point" ></div> 
+    <div id="back" ></div>
+  </div>
+  
+  <div id="remember">
+    CSS3 no JavaScript just GPU
+  </div>
+
+  <div class="legend seg">
+    <h3>Seconds</h3>
+    <pre>
+      date = new Date()
+      segs = date.getSeconds()
+      deg = segs * 6
+
+      coffeefx('seg')
+            .timing('linear')
+            .iteration('infinite')
+            .duration('60s')
+              .from()
+                .rotate(deg)
+                .pop()
+              .to()
+                .rotate(360 + deg)
+              .pop()
+          .end()
+  </pre>
+  </div>
+  <div class="legend min">
+    <h3>Minutes</h3>
+    
+    <pre>
+      min = date.getMinutes()
+       deg = min * 6
+
+       coffeefx('min')
+             .timing('linear')
+             .iteration('infinite')
+             .duration('3600s')
+               .from()
+                 .rotate(deg)
+                 .pop()
+               .to()
+                 .rotate(360 + deg)
+               .pop()
+           .end()
+           
+    </pre>
+  </div>
+  <div class="legend hour">
+    <h3>Minutes</h3>
+    <pre>
+      hour = date.getHours()
+      deg = hour * 30
+      
+      coffeefx('hour')
+            .timing('linear')
+            .iteration('infinite')
+            .duration("86400s")
+              .from()
+                .rotate(deg)
+                .pop()
+              .to()
+                .rotate(360 + deg)
+              .pop()
+          .end()
+          
+      </pre>
+  </div>
+  <div class="legend html">
+    <h3>Html</h3>
+    <pre>
+      &lt;!-- Seconds --&gt;
+      &lt;div id="seg" &gt;
+        &lt;div id="seg-in"&gt;&lt;/div&gt;
+      &lt;/div&gt; 
+
+      &lt;!-- Minutes --&gt;
+      &lt;div id="min" &gt;
+        &lt;div id="min-in"&gt;&lt;/div&gt;
+      &lt;/div&gt; 
+
+      &lt;!-- Hours --&gt;
+      &lt;div id="hour" &gt;
+        &lt;div id="hour-in"&gt;&lt;/div&gt;
+      &lt;/div&gt; 
+
+      &lt;!-- Decoration --&gt;
+      &lt;div id="point" &gt;&lt;/div&gt; 
+      &lt;div id="back" &gt;&lt;/div&gt;
+    </pre>
+  </div>
+</body>
+</html>

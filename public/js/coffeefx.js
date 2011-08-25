@@ -320,7 +320,7 @@
         window.setTimeout((function() {
           return self.el.style.webkitAnimationName = self._context;
         }), 0);
-        this.el.className += " " + this._context;
+        this.el.className = " " + this._context;
       }
       return this;
     };
