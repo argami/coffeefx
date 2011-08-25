@@ -51,7 +51,7 @@
           var cfx;
           cfx = coffeefx(".classname_noid");
           cfx.context();
-          return (expect(cfx._context.search(cfx.el.className))).toBeGreaterThan(-1);
+          return (expect(cfx._context.search(cfx.el.className))).not.toBeGreaterThan(-1);
         });
         it("should return the same context", function() {
           this.cfx._context = "test_context";
@@ -108,7 +108,7 @@
           return (expect(this.cfx._prepare(this.cfx._context))).toEqual("-webkit-transition-duration:500ms; -moz-transition-duration:500ms; -ms-transition-duration:500ms; -o-transition-duration:500ms; -webkit-transform:skew(9deg, 0deg) ; -moz-transform:skew(9deg, 0deg) ; -ms-transform:skew(9deg, 0deg) ; -o-transform:skew(9deg, 0deg) ;");
         });
       });
-      return describe("transforms", function() {
+      describe("transforms", function() {
         it("should exist all the transform functions", function() {
           (expect(this.cfx.skew)).not.toEqual(void 0);
           (expect(this.cfx.skewX)).not.toEqual(void 0);
@@ -324,6 +324,14 @@
             _results.push((expect(this.cfx.context()["" + brow + "transform-style"])).not.toBeDefined);
           }
           return _results;
+        });
+      });
+      return describe("animations", function() {
+        it("should exist all the animations functions functions", function() {
+          return (expect(this.cfx.from)).not.toEqual(void 0);
+        });
+        return it("should generate a new context in the _fx (animations)", function() {
+          return (expect(this.cfx.from()._context)).toEqual('from');
         });
       });
     });

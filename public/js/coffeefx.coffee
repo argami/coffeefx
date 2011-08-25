@@ -17,10 +17,11 @@
 #         .skew()
 #        	.animation("name", callback).delay()
 #        		.transform().rotate().skew()
+#           .from().pop()
 #        		.step()
 #        			.transform().rotate().skew()
 #        			.transition()...
-#        		.onEnd(callback)
+#        		.animationEnd(callback)
 #        	.end()
 #
 #
@@ -33,6 +34,11 @@
 #     
 #   }
 # }
+#
+# class {}
+# from {}
+# to {}
+# step {}
 ##################################################################################
 
 
@@ -111,6 +117,7 @@ window.Coffeefx = class Coffeefx
     @el = @select(selector)
     @_fx = {} #this variable save all the information of the whole effects
     @_context = undefined
+    @_baseContext()
     @callbacks = []
     if @el != undefined
       @transitionDuration() #add the transitionDuration as default
@@ -150,11 +157,9 @@ window.Coffeefx = class Coffeefx
     @api private
   ---------------------------------
   ###
-  context: (context = "cssClass") ->
-    # if context != null
-    #   @_baseContext[context] = {} if @_baseContext[context] == undefined
-    @_baseContext[context]
-    # @_baseContext()
+  context: (context = "class") -> 
+    @_baseContext()[context] = {} if @_baseContext()[context] == undefined
+    @_baseContext()[context]
 
   ###
   ---------------------------------
@@ -208,9 +213,8 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  _prepare: (context = null) -> 
-    context = context ? @_context
-    text = JSON.stringify @_fx[@_context]
+  _prepare: () -> 
+    text = JSON.stringify @context()
     text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
 
 
@@ -256,7 +260,13 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  pop: () -> @parent || @
+  pop: () -> 
+    if @parent? and @_context in @animation_params
+      @parent._baseContext()[@_context] = context()
+    @parent || @    
+        
+    #original statement just for using then
+    # @parent || @
 
   ###
   ---------------------------------
@@ -536,8 +546,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  add: (prop, val) ->
-    @set(prop, parseInt(@current(prop), 10) + val + 'px')
+  add: (prop, val) -> @set(prop, parseInt(@current(prop), 10) + val + 'px')
 
   ###
   ---------------------------------
@@ -551,8 +560,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
-  sub: (prop, val) ->
-    @set(prop, parseInt(@current(prop), 10) - val + 'px')
+  sub: (prop, val) -> @set(prop, parseInt(@current(prop), 10) - val + 'px')
     
   ###
   ---------------------------------
@@ -589,3 +597,22 @@ window.Coffeefx = class Coffeefx
     @_setBrowser('transition-delay', "#{n}ms")
 
   
+
+  ##################################################################
+  # Animation
+  ##################################################################
+  animation_params = ['from', 'to']
+  
+  _clone: (prop) ->
+    child = new Coffeefx(@_selector)
+    child._context = prop
+    child.parent = @
+    child._baseContext()
+    child
+    
+  
+  from: () -> child = @_clone("from")
+  
+
+
+

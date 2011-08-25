@@ -49,7 +49,7 @@ describe "coffeefx", ->
       it "should generate a context name using the classname in case select by id", ->
         cfx = coffeefx(".classname_noid")
         cfx.context()
-        (expect cfx._context.search(cfx.el.className)).toBeGreaterThan -1
+        (expect cfx._context.search(cfx.el.className)).not.toBeGreaterThan -1
 
       it "should return the same context", ->
         @cfx._context = "test_context"
@@ -179,3 +179,24 @@ describe "coffeefx", ->
       it "origin should not exist as -{brow}-perspective with the non valid value (flato)", ->
         @cfx.transformStyle('flat0')
         (expect @cfx.context()["#{brow}transform-style"]).not.toBeDefined for brow in browsers
+        
+    describe "animations", ->
+      it "should exist all the animations functions functions", ->
+        # (expect @cfx.animation).not.toEqual undefined
+        (expect @cfx.from).not.toEqual undefined
+        # (expect @cfx.to).not.toEqual undefined
+      
+      it "should generate a new context in the _fx (animations)", ->
+        (expect @cfx.from()._context).toEqual 'from'
+
+      # it "should generate a new context in the _fx (animations)", ->
+      #   @cfx.from()
+      #   (expect @cfx.context("animation")).not.toEqual undefined
+      # 
+      # it "should generate a new context in the _fx (animations  -> from)", ->
+      #   @cfx.from()
+      #   (expect @cfx.context("animation")["from"]).not.toEqual undefined
+      # 
+      # it "transformations should write in that context", ->
+      #   @cfx.from()
+      #   (expect @cfx.context("animation")["from"]).not.toEqual undefined

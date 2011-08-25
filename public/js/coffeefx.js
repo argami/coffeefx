@@ -1,5 +1,11 @@
 (function() {
   var Coffeefx, current, map;
+  var __indexOf = Array.prototype.indexOf || function(item) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      if (this[i] === item) return i;
+    }
+    return -1;
+  };
   window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-'];
   window.coffeefx = function(selector) {
     return new Coffeefx(selector);
@@ -31,6 +37,7 @@
     'snap': 'cubic-bezier(0,1,.5,1)'
   };
   window.Coffeefx = Coffeefx = (function() {
+    var animation_params;
     function Coffeefx(selector) {
       if (selector == null) {
         selector = "";
@@ -42,6 +49,7 @@
       this.el = this.select(selector);
       this._fx = {};
       this._context = void 0;
+      this._baseContext();
       this.callbacks = [];
       if (this.el !== void 0) {
         this.transitionDuration();
@@ -87,9 +95,12 @@
       */
     Coffeefx.prototype.context = function(context) {
       if (context == null) {
-        context = "cssClass";
+        context = "class";
       }
-      return this._baseContext[context];
+      if (this._baseContext()[context] === void 0) {
+        this._baseContext()[context] = {};
+      }
+      return this._baseContext()[context];
     };
     /*
       ---------------------------------
@@ -150,13 +161,9 @@
         @api private
       ---------------------------------
       */
-    Coffeefx.prototype._prepare = function(context) {
+    Coffeefx.prototype._prepare = function() {
       var text;
-      if (context == null) {
-        context = null;
-      }
-      context = context != null ? context : this._context;
-      text = JSON.stringify(this._fx[this._context]);
+      text = JSON.stringify(this.context());
       return text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";");
     };
     /*
@@ -200,6 +207,10 @@
       ---------------------------------
       */
     Coffeefx.prototype.pop = function() {
+      var _ref;
+      if ((this.parent != null) && (_ref = this._context, __indexOf.call(this.animation_params, _ref) >= 0)) {
+        this.parent._baseContext()[this._context] = context();
+      }
       return this.parent || this;
     };
     /*
@@ -564,6 +575,19 @@
     Coffeefx.prototype.delay = function(n) {
       n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this._setBrowser('transition-delay', "" + n + "ms");
+    };
+    animation_params = ['from', 'to'];
+    Coffeefx.prototype._clone = function(prop) {
+      var child;
+      child = new Coffeefx(this._selector);
+      child._context = prop;
+      child.parent = this;
+      child._baseContext();
+      return child;
+    };
+    Coffeefx.prototype.from = function() {
+      var child;
+      return child = this._clone("from");
     };
     return Coffeefx;
   })();
