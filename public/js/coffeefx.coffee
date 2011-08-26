@@ -224,7 +224,7 @@ window.Coffeefx = class Coffeefx
       else
         keyframe += "#{key} { #{val} }"
     
-    text += " @-webkit-keyframes #{@_context}  { #{keyframe} }"
+    text += " @#{key}keyframes #{@_context}  { #{keyframe} } " for key in browsers
 
     # text = JSON.stringify(@context())
     # text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")

@@ -155,7 +155,7 @@
       ---------------------------------
       */
     Coffeefx.prototype._prepare = function() {
-      var key, keyframe, text, val, value, _ref;
+      var key, keyframe, text, val, value, _i, _len, _ref, _results;
       text = "";
       keyframe = "";
       _ref = this._baseContext();
@@ -168,7 +168,12 @@
           keyframe += "" + key + " { " + val + " }";
         }
       }
-      return text += " @-webkit-keyframes " + this._context + "  { " + keyframe + " }";
+      _results = [];
+      for (_i = 0, _len = browsers.length; _i < _len; _i++) {
+        key = browsers[_i];
+        _results.push(text += " @" + key + "keyframes " + this._context + "  { " + keyframe + " } ");
+      }
+      return _results;
     };
     /*
       ---------------------------------
