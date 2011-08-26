@@ -167,7 +167,7 @@
             .end()
             
         min = date.getMinutes()
-        deg = min * 6
+        deg = (min * 6) + (deg / 100)
 
         coffeefx('min')
               .timing('linear')
@@ -182,7 +182,7 @@
             .end()
 
         hour = date.getHours()
-        deg = hour * 30
+        deg = (hour * 30) + min / 2
         
         coffeefx('hour')
               .timing('linear')
@@ -259,7 +259,7 @@
     <h3>Minutes</h3>
     <pre>
       hour = date.getHours()
-      deg = hour * 30
+      deg = (hour * 30) + min / 2
       
       coffeefx('hour')
             .timing('linear')

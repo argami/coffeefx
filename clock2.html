@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>CSS3/jQuery Clock demo</title>
+    
+    <script src="coffee-script.js"></script>
+    <script src="coffeefx.js" type="text/javascript" charset="utf-8"></script>
+    
+    <style type="text/css">
+        * {
+        	margin: 0;
+        	padding: 0;
+        }
+        
+        #clock {
+        	position: relative;
+        	width: 600px;
+        	height: 600px;
+        	margin: 20px auto 0 auto;
+        	background: url(images/clockface.jpg);
+        	list-style: none;
+        	}
+        
+        #sec, #min, #hour {
+        	position: absolute;
+        	width: 30px;
+        	height: 600px;
+        	top: 0px;
+        	left: 285px;
+        	}
+        
+        #sec {
+        	background: url(images/sechand.png);
+        	z-index: 3;
+           	}
+           
+        #min {
+        	background: url(images/minhand.png);
+        	z-index: 2;
+           	}
+           
+        #hour {
+        	background: url(images/hourhand.png);
+        	z-index: 1;
+           	}
+           	
+        p {
+            text-align: center; 
+            padding: 10px 0 0 0;
+            }
+    </style>
+    
+    <script type="text/coffeescript">
+          date = new Date()
+          segs = date.getSeconds()
+          deg = segs * 6
+
+          coffeefx('sec')
+                .timing('linear')
+                .iteration('infinite')
+                .duration('60s')
+                  .from()
+                    .rotate(deg)
+                    .pop()
+                  .to()
+                    .rotate(360 + deg)
+                  .pop()
+              .end()
+
+          min = date.getMinutes()
+          deg = (min * 6) + (deg / 100)
+
+          coffeefx('min')
+                .timing('linear')
+                .iteration('infinite')
+                .duration('3600s')
+                  .from()
+                    .rotate(deg)
+                    .pop()
+                  .to()
+                    .rotate(360 + deg)
+                  .pop()
+              .end()
+
+          hour = date.getHours()
+          deg = (hour * 30) + min / 2
+
+          coffeefx('hour')
+                .timing('linear')
+                .iteration('infinite')
+                .duration("43200s")
+                  .from()
+                    .rotate(deg)
+                    .pop()
+                  .to()
+                    .rotate(360 + deg)
+                  .pop()
+              .end()
+
+
+    </script>
+
+</head>
+
+<body>
+
+	<ul id="clock">	
+	   	<li id="sec"></li>
+	   	<li id="hour"></li>
+		<li id="min"></li>
+	</ul>
+	
+</body>
+	
+</html>
+
