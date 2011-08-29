@@ -217,14 +217,17 @@ window.Coffeefx = class Coffeefx
     text = ""
     keyframe = ""
     for key, value of @_baseContext()
-      # console.log JSON.stringify value
       val = JSON.stringify(value).replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";").replace(/,/g,"; ")
       if key == "class"
         text += ".#{@_context} { #{val} }"
       else
         keyframe += "#{key} { #{val} }"
+
+    if keyframe!=""
+      text += " @#{key}keyframes #{@_context}  { #{keyframe} } " for key in browsers 
+      
+    text
     
-    text += " @#{key}keyframes #{@_context}  { #{keyframe} } " for key in browsers
 
     # text = JSON.stringify(@context())
     # text = text.replace(/","/gi, "; ").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
@@ -243,7 +246,7 @@ window.Coffeefx = class Coffeefx
   
   _addCssClass: (className, class_text) ->
     cssAnimation = document.createElement('style')
-    cssAnimation.id = className
+    cssAnimation.id = "#{className}_style"
     cssAnimation.type = 'text/css'
     cssAnimation.appendChild( document.createTextNode( class_text ) )
     document.getElementsByTagName("head")[0].appendChild(cssAnimation)
@@ -341,12 +344,13 @@ window.Coffeefx = class Coffeefx
     if @context()['-webkit-animation-name'] == undefined
       @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
       @el.style.setProperty(prop, value, '') for prop, value of @context()
+        
     else
       @el.addEventListener( 'webkitAnimationEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
       @_addCssClass(@_context, @_prepare())
       @el.style.webkitAnimationName = ''; 
       window.setTimeout( (-> self.el.style.webkitAnimationName = self._context), 0);
-      @el.className = " #{@_context}"
+      @el.className += " #{@_context}"
     @
   
   
@@ -645,7 +649,6 @@ window.Coffeefx = class Coffeefx
     @animationDuration(n)
   
   animationDuration: (n=500) ->
-    console.log n
     n = if 'string' == typeof n then parseFloat(n) * 1000 else n
     @_setBrowser('animation-duration', "#{n}ms", false)
   
@@ -655,4 +658,59 @@ window.Coffeefx = class Coffeefx
     @_setBrowser('animation-timing-function', fn, false)
 
 
+##################################################################
+# Animation
+##################################################################
 
+
+# [
+#   {
+#     "object" : "logo",
+#     "id" : "#logo",
+# 
+#     "init" : { 
+#       "margin": "0px",
+#       "padding": "0px",      
+#       "width": "1080px",
+#       "height": "1920px",
+#       "border": "3px solid white",
+#       "overflow": "hidden",
+#     },
+#     
+#   },
+# 
+#   {
+#     "object" : "logo",
+#     "id" : "#logo",
+# 
+#     "init" : { 
+#       "margin-top": "-700px", 
+#       "margin-left": "200px", 
+#     },
+#     "transition": {  "X": "500px", "opacity": "500px",}
+#   }
+# ]
+
+window.Caffea = class Caffea
+  constructor: (@objects = []) ->
+
+  execute: () ->
+    for object in @objects
+      @cfx = coffeefx(object["id"])
+      @_init(object["id"], object["init"])
+      @_transformation(object["id"], object["transformation"])
+      console.log @cfx
+      @cfx.end()
+  
+  # Init execution before anything with no time
+  _init: (object, object_init) ->
+    @cfx._context = object
+    @cfx.set(key, value) for key, value of object_init
+    @cfx.duration(0)
+    @cfx._addCssClass(@cfx._context, @cfx._prepare().replace(/^./, ""))
+    #returning a clean one
+    @cfx = coffeefx(object)
+  
+  _transformation: (object, object_trans) ->
+    @cfx[key]([value]) for key, value of object_trans
+    @cfx

@@ -1,5 +1,5 @@
 (function() {
-  var Coffeefx, current, map;
+  var Caffea, Coffeefx, current, map;
   window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-'];
   window.coffeefx = function(selector) {
     return new Coffeefx(selector);
@@ -155,7 +155,7 @@
       ---------------------------------
       */
     Coffeefx.prototype._prepare = function() {
-      var key, keyframe, text, val, value, _i, _len, _ref, _results;
+      var key, keyframe, text, val, value, _i, _len, _ref;
       text = "";
       keyframe = "";
       _ref = this._baseContext();
@@ -168,12 +168,13 @@
           keyframe += "" + key + " { " + val + " }";
         }
       }
-      _results = [];
-      for (_i = 0, _len = browsers.length; _i < _len; _i++) {
-        key = browsers[_i];
-        _results.push(text += " @" + key + "keyframes " + this._context + "  { " + keyframe + " } ");
+      if (keyframe !== "") {
+        for (_i = 0, _len = browsers.length; _i < _len; _i++) {
+          key = browsers[_i];
+          text += " @" + key + "keyframes " + this._context + "  { " + keyframe + " } ";
+        }
       }
-      return _results;
+      return text;
     };
     /*
       ---------------------------------
@@ -188,7 +189,7 @@
     Coffeefx.prototype._addCssClass = function(className, class_text) {
       var cssAnimation;
       cssAnimation = document.createElement('style');
-      cssAnimation.id = className;
+      cssAnimation.id = "" + className + "_style";
       cssAnimation.type = 'text/css';
       cssAnimation.appendChild(document.createTextNode(class_text));
       return document.getElementsByTagName("head")[0].appendChild(cssAnimation);
@@ -325,7 +326,7 @@
         window.setTimeout((function() {
           return self.el.style.webkitAnimationName = self._context;
         }), 0);
-        this.el.className = " " + this._context;
+        this.el.className += " " + this._context;
       }
       return this;
     };
@@ -634,7 +635,6 @@
       if (n == null) {
         n = 500;
       }
-      console.log(n);
       n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this._setBrowser('animation-duration', "" + n + "ms", false);
     };
@@ -648,5 +648,44 @@
       return this._setBrowser('animation-timing-function', fn, false);
     };
     return Coffeefx;
+  })();
+  window.Caffea = Caffea = (function() {
+    function Caffea(objects) {
+      this.objects = objects != null ? objects : [];
+    }
+    Caffea.prototype.execute = function() {
+      var object, _i, _len, _ref, _results;
+      _ref = this.objects;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        object = _ref[_i];
+        this.cfx = coffeefx(object["id"]);
+        this._init(object["id"], object["init"]);
+        this._transformation(object["id"], object["transformation"]);
+        console.log(this.cfx);
+        _results.push(this.cfx.end());
+      }
+      return _results;
+    };
+    Caffea.prototype._init = function(object, object_init) {
+      var key, value;
+      this.cfx._context = object;
+      for (key in object_init) {
+        value = object_init[key];
+        this.cfx.set(key, value);
+      }
+      this.cfx.duration(0);
+      this.cfx._addCssClass(this.cfx._context, this.cfx._prepare().replace(/^./, ""));
+      return this.cfx = coffeefx(object);
+    };
+    Caffea.prototype._transformation = function(object, object_trans) {
+      var key, value;
+      for (key in object_trans) {
+        value = object_trans[key];
+        this.cfx[key]([value]);
+      }
+      return this.cfx;
+    };
+    return Caffea;
   })();
 }).call(this);
