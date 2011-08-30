@@ -279,7 +279,8 @@ window.Coffeefx = class Coffeefx
   ###
 
   pop: () -> 
-    @parent._baseContext()[@_context] = @context() if @parent? and @_context in ['from', 'to']
+    console.log (@_context in ['from', 'to'] or '%' in @_context)
+    @parent._baseContext()[@_context] = @context() if @parent? and @_valid_step(@_context)
     @parent || @    
         
     #original statement just for using then
@@ -643,12 +644,18 @@ window.Coffeefx = class Coffeefx
   
   setAnimationName: () -> @_setBrowser('animation-name', @_context, false)
   
+  
+  ###
+  % step has to be always declared as 50% in string form 
+  ###
+  valid_step: (step) -> (step in ['from', 'to'] or '%' in step)
   step: (step) ->
     @setAnimationName()
     child = @_clone(step)
 
   from: () -> @step('from')
   to: () -> @step('to')
+  
   
   duration: (n=500) ->
     @transitionDuration(n)
@@ -744,7 +751,7 @@ window.Caffea = class Caffea
   
   _animation:  (object_animation) ->
     for step, step_values of object_animation
-      if step in ['from', 'to']
+      if cfx.valid_step(step) 
         cfx = @cfx[step]()
         @_set(cfx, key, value) for key, value of step_values
         @cfx = cfx.pop()

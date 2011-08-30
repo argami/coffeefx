@@ -26,29 +26,10 @@
       color:gray;
       font-size:12px;
     }
-    #box { margin-left:200px; }
-    .logo_691413 { 
-      -webkit-animation-fill-mode:forwards;
-      -webkit-transition-duration:2000ms; -moz-transition-duration:2000ms; -ms-transition-duration:2000ms; -o-transition-duration:2000ms; -webkit-animation-duration:2000ms; -moz-animation-duration:2000ms; -ms-animation-duration:2000ms; -o-animation-duration:2000ms; -webkit-animation-name:logo_691413; -moz-animation-name:logo_691413; -ms-animation-name:logo_691413; -o-animation-name:logo_691413; } 
-      @-webkit-keyframes logo_691413  { 
-        from { 
-        -webkit-transform:scale(1,1) ; 
-        margin-top:0px; 
-      }
-        to { 
-          -webkit-transform:scale(1,  1) ; 
-          margin-top:700px; 
-        } 
-      } 
   </style>
   <script type="text/coffeescript">
       window.box = () -> 
-        #caffea = new Caffea([{ "object" : "vao", "id" : "#box", "init" : { "visibility":"visible", "margin-top": "1800px", "margin-left": "200px"}, 
-        #"animation" : { "duration": 4000, "iteration":"infinite", "timing":"linear", "to": {"margin-top":-100, "ease":"cubic-bezier(0,2,2,0)"}  }},])
-        caffea = new Caffea([{ "object" : "vao", "id" : "#box", "init" : { "visibility":"visible", "margin-top": "1800px", "margin-left": "200px"}, 
-        "transformation" : { "duration": 4000, "margin-top":-100, "ease":"cubic-bezier(0,2,2,0)"  }},])
-        caffea.execute()
-        #coffeefx('.box').rotate(360).transitionDuration('3s').end(-> alert("test"))
+        coffeefx('#box').duration('3s').from().x(100).pop().step(50).y(100).pop().to().x(400).pop().end()
   </script>
 </head>
 <body>

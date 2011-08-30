@@ -238,7 +238,8 @@
       */
     Coffeefx.prototype.pop = function() {
       var _ref;
-      if ((this.parent != null) && ((_ref = this._context) === 'from' || _ref === 'to')) {
+      console.log(((_ref = this._context) === 'from' || _ref === 'to') || __indexOf.call(this._context, '%') >= 0);
+      if ((this.parent != null) && this._valid_step(this._context)) {
         this.parent._baseContext()[this._context] = this.context();
       }
       return this.parent || this;
@@ -637,6 +638,12 @@
     Coffeefx.prototype.setAnimationName = function() {
       return this._setBrowser('animation-name', this._context, false);
     };
+    /*
+      % step has to be always declared as 50% in string form 
+      */
+    Coffeefx.prototype.valid_step = function(step) {
+      return (step === 'from' || step === 'to') || __indexOf.call(step, '%') >= 0;
+    };
     Coffeefx.prototype.step = function(step) {
       var child;
       this.setAnimationName();
@@ -738,7 +745,7 @@
       for (step in object_animation) {
         step_values = object_animation[step];
         _results.push((function() {
-          if (step === 'from' || step === 'to') {
+          if (cfx.valid_step(step)) {
             cfx = this.cfx[step]();
             for (key in step_values) {
               value = step_values[key];
