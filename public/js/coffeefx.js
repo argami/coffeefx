@@ -743,7 +743,7 @@
         step_values = object_animation[step];
         _results.push((function() {
           if (this.cfx.valid_step(step)) {
-            cfx = this.cfx[step]();
+            cfx = this.cfx.step(step);
             for (key in step_values) {
               value = step_values[key];
               this._set(cfx, key, value);

@@ -31,12 +31,13 @@
       window.normal_coffee = () -> 
         coffeefx('#box').duration('3s').from().x(0).pop().step('50%').y(100).x(250).pop().to().x(400).pop().end()
       window.coffea = () -> 
-        content = { "object":"box", "id":"#box", "animation": {"duration":"5s", "fillmode":"forward", 
+        content = { "object":"box", "id":"#box", "animation": {"duration":5000, "fillmode":"forward", 
         "from": { "x":0 },
         "50%":{ "y":100, "x":250  },
         "to":{ "x":400}
         } }
-        coffea = new Coffea(content)
+        coffea = new Coffea([content])
+        console.log coffea
         coffea.execute()
   </script>
 </head>

@@ -750,7 +750,7 @@ window.Coffea = class Coffea
   _animation:  (object_animation) ->
     for step, step_values of object_animation
       if @cfx.valid_step(step) 
-        cfx = @cfx[step]()
+        cfx = @cfx.step(step)
         @_set(cfx, key, value) for key, value of step_values
         @cfx = cfx.pop()
       else
