@@ -28,8 +28,16 @@
     }
   </style>
   <script type="text/coffeescript">
-      window.box = () -> 
-        coffeefx('#box').duration('3s').from().x(100).pop().step(50).y(100).pop().to().x(400).pop().end()
+      window.normal_coffee = () -> 
+        coffeefx('#box').duration('3s').from().x(0).pop().step('50%').y(100).x(250).pop().to().x(400).pop().end()
+      window.coffea = () -> 
+        content = { "object":"box", "id":"#box", "animation": {"duration":"5s", "fillmode":"forward", 
+        "from": { "x":0 },
+        "50%":{ "y":100, "x":250  },
+        "to":{ "x":400}
+        } }
+        coffea = new Coffea(content)
+        coffea.execute()
   </script>
 </head>
 <body>
@@ -37,7 +45,8 @@
 
 <div id="wrapper">
     <div id="box" onclick="className='logo_691413'"><a href="#" >HOLA</a></div>
-    <a href="#" onclick="box()">DOS</a>
+    <a href="#" onclick="normal_coffee()">normal coffee</a>
+    <a href="#" onclick="coffea()">coffea</a>
 </div>
 <div id="legend">
   coffeefx('.box').rotate(360).transitionDuration(100).end()

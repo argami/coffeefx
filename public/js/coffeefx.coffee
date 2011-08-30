@@ -279,8 +279,7 @@ window.Coffeefx = class Coffeefx
   ###
 
   pop: () -> 
-    console.log (@_context in ['from', 'to'] or '%' in @_context)
-    @parent._baseContext()[@_context] = @context() if @parent? and @_valid_step(@_context)
+    @parent._baseContext()[@_context] = @context() if @parent? and @valid_step(@_context)
     @parent || @    
         
     #original statement just for using then
@@ -726,7 +725,6 @@ window.Coffea = class Coffea
       @_init(object["id"], object["init"]) if object["init"] != undefined
       @_transformation(object["transformation"]) if object["transformation"] != undefined
       @_animation(object["animation"]) if object["animation"] != undefined
-      console.log @cfx
       @cfx.end()
   
   # Init execution before anything with no time
@@ -751,7 +749,7 @@ window.Coffea = class Coffea
   
   _animation:  (object_animation) ->
     for step, step_values of object_animation
-      if cfx.valid_step(step) 
+      if @cfx.valid_step(step) 
         cfx = @cfx[step]()
         @_set(cfx, key, value) for key, value of step_values
         @cfx = cfx.pop()

@@ -237,9 +237,7 @@
       ---------------------------------
       */
     Coffeefx.prototype.pop = function() {
-      var _ref;
-      console.log(((_ref = this._context) === 'from' || _ref === 'to') || __indexOf.call(this._context, '%') >= 0);
-      if ((this.parent != null) && this._valid_step(this._context)) {
+      if ((this.parent != null) && this.valid_step(this._context)) {
         this.parent._baseContext()[this._context] = this.context();
       }
       return this.parent || this;
@@ -708,7 +706,6 @@
         if (object["animation"] !== void 0) {
           this._animation(object["animation"]);
         }
-        console.log(this.cfx);
         _results.push(this.cfx.end());
       }
       return _results;
@@ -745,7 +742,7 @@
       for (step in object_animation) {
         step_values = object_animation[step];
         _results.push((function() {
-          if (cfx.valid_step(step)) {
+          if (this.cfx.valid_step(step)) {
             cfx = this.cfx[step]();
             for (key in step_values) {
               value = step_values[key];
