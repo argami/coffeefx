@@ -685,6 +685,22 @@
     };
     return Coffeefx;
   })();
+  window.coffea = function(objects) {
+    new Coffea(objects);
+    return {
+      load: function(url) {
+        var cfa, xhReq;
+        xhReq = new XMLHttpRequest();
+        xhReq.open("GET", url, false);
+        xhReq.send(null);
+        objects = eval(xhReq.responseText);
+        cfa = new Coffea(objects);
+        console.log(cfa);
+        cfa.execute();
+        return cfa;
+      }
+    };
+  };
   window.Coffea = Coffea = (function() {
     var css_values;
     function Coffea(objects) {
@@ -696,6 +712,7 @@
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         object = _ref[_i];
+        console.log(object["id"]);
         this.cfx = coffeefx(object["id"]);
         if (object["init"] !== void 0) {
           this._init(object["id"], object["init"]);

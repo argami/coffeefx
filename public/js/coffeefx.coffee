@@ -681,46 +681,26 @@ window.Coffeefx = class Coffeefx
 ##################################################################
 
 
-# [
-#   {
-#     "object" : "logo",
-#     "id" : "#logo",
-# 
-#     "init" : { 
-#       "margin": "0px",
-#       "padding": "0px",      
-#       "width": "1080px",
-#       "height": "1920px",
-#       "border": "3px solid white",
-#       "overflow": "hidden",
-#     },
-#     
-#   },
-# 
-#   {
-#     "object" : "logo",
-#     "id" : "#logo",
-# 
-#     "init" : { 
-#       "margin-top": "-700px", 
-#       "margin-left": "200px", 
-#     },
-#     "transition": {  "X": "500px", "opacity": "500px",}
-#     "animation": {  
-#         "from":{
-#           "X": "500px"; 
-#           "opacity": "500px",
-#         }
-#         
-#       }
-#   }
-# ]
+window.coffea = (objects) ->
+  new Coffea(objects)
+  
+  load: (url) ->
+    xhReq = new XMLHttpRequest();
+    xhReq.open("GET", url, false)
+    xhReq.send(null)
+    objects = eval(xhReq.responseText)
+    cfa = new Coffea(objects)
+    console.log cfa
+    cfa.execute()
+    cfa
+
 
 window.Coffea = class Coffea
   constructor: (@objects = []) ->
-
+  
   execute: () ->
     for object in @objects
+      console.log object["id"]
       @cfx = coffeefx(object["id"])
       @_init(object["id"], object["init"]) if object["init"] != undefined
       @_transformation(object["transformation"]) if object["transformation"] != undefined
