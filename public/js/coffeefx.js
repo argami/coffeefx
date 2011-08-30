@@ -1,5 +1,5 @@
 (function() {
-  var Caffea, Coffeefx, current, map;
+  var Coffea, Coffeefx, current, map;
   var __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
@@ -687,12 +687,12 @@
     };
     return Coffeefx;
   })();
-  window.Caffea = Caffea = (function() {
+  window.Coffea = Coffea = (function() {
     var css_values;
-    function Caffea(objects) {
+    function Coffea(objects) {
       this.objects = objects != null ? objects : [];
     }
-    Caffea.prototype.execute = function() {
+    Coffea.prototype.execute = function() {
       var object, _i, _len, _ref, _results;
       _ref = this.objects;
       _results = [];
@@ -713,7 +713,7 @@
       }
       return _results;
     };
-    Caffea.prototype._init = function(object, object_init) {
+    Coffea.prototype._init = function(object, object_init) {
       var key, value;
       this.cfx._context = object;
       for (key in object_init) {
@@ -724,14 +724,14 @@
       this.cfx._addCssClass(this.cfx._context, this.cfx._prepare().replace(/^./, ""));
       return this.cfx = coffeefx(object);
     };
-    Caffea.prototype._set = function(cfx, key, value) {
+    Coffea.prototype._set = function(cfx, key, value) {
       if ((__indexOf.call(css_values, key) >= 0)) {
         return cfx.set(key, value);
       } else {
         return cfx[key](value);
       }
     };
-    Caffea.prototype._transformation = function(object_trans) {
+    Coffea.prototype._transformation = function(object_trans) {
       var key, value;
       for (key in object_trans) {
         value = object_trans[key];
@@ -739,7 +739,7 @@
       }
       return this.cfx;
     };
-    Caffea.prototype._animation = function(object_animation) {
+    Coffea.prototype._animation = function(object_animation) {
       var cfx, key, step, step_values, value, _results;
       _results = [];
       for (step in object_animation) {
@@ -760,6 +760,6 @@
       return _results;
     };
     css_values = ['azimuth', 'background', 'background-attachment', 'background-color', 'background-image', 'background-position', 'background-repeat', 'border', 'border-bottom', 'border-bottom-color', 'border-bottom-style', 'border-bottom-width', 'border-collapse', 'border-color', 'border-left', 'border-left-color', 'border-left-style', 'border-left-width', 'border-right', 'border-right-color', 'border-right-style', 'border-right-width', 'border-spacing', 'border-style', 'border-top', 'border-top-color', 'border-top-style', 'border-top-width', 'border-width', 'bottom', 'caption-side', 'clear', 'clip', 'color', 'content', 'counter-increment', 'counter-reset', 'cue', 'cue-after', 'cue-before', 'cursor', 'direction', 'display', 'elevation', 'empty-cells', 'float', 'font', 'font-family', 'font-size', 'font-style', 'font-variant', 'font-weight', 'height', 'left', 'letter-spacing', 'line-height', 'list-style', 'list-style-image', 'list-style-position', 'list-style-type', 'margin', 'margin-bottom', 'margin-left', 'margin-right', 'margin-top', 'max-height', 'max-width', 'min-height', 'min-width', 'opacity', 'orphans', 'outline', 'outline-color', 'outline-style', 'outline-width', 'overflow', 'padding', 'padding-bottom', 'padding-left', 'padding-right', 'padding-top', 'page-break-after', 'page-break-before', 'page-break-inside', 'pause', 'pause-after', 'pause-before', 'pitch', 'pitch-range', 'play-during', 'position', 'quotes', 'richness', 'right', 'speak', 'speak-header', 'speak-numeral', 'speak-punctuation', 'speech-rate', 'stress', 'table-layout', 'text-align', 'text-decoration', 'text-indent', 'text-transform', 'top', 'unicode-bidi', 'vertical-align', 'visibility', 'voice-family', 'volume', 'white-space', 'widows', 'width', 'word-spacing', 'z-index'];
-    return Caffea;
+    return Coffea;
   })();
 }).call(this);

@@ -717,7 +717,7 @@ window.Coffeefx = class Coffeefx
 #   }
 # ]
 
-window.Caffea = class Caffea
+window.Coffea = class Coffea
   constructor: (@objects = []) ->
 
   execute: () ->
