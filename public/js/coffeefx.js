@@ -1,5 +1,11 @@
 (function() {
   var Caffea, Coffeefx, current, map;
+  var __indexOf = Array.prototype.indexOf || function(item) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      if (this[i] === item) return i;
+    }
+    return -1;
+  };
   window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-'];
   window.coffeefx = function(selector) {
     return new Coffeefx(selector);
@@ -128,6 +134,20 @@
         @api private
       ---------------------------------
       */
+    Coffeefx.prototype._deleteBrowserAction = function(action) {
+      var brow;
+      if ((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = browsers.length; _i < _len; _i++) {
+          brow = browsers[_i];
+          _results.push(this.context()[brow + action] !== void 0);
+        }
+        return _results;
+      }).call(this)) {
+        return delete this.context()[brow + action];
+      }
+    };
     Coffeefx.prototype._setBrowser = function(action, value, sum) {
       var brow, val, _i, _len;
       if (sum == null) {
@@ -326,7 +346,7 @@
         window.setTimeout((function() {
           return self.el.style.webkitAnimationName = self._context;
         }), 0);
-        this.el.className += " " + this._context;
+        this.el.className = "" + this._context;
       }
       return this;
     };
@@ -538,8 +558,12 @@
       if (n == null) {
         n = 500;
       }
-      n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
-      return this._setBrowser('transition-duration', "" + n + "ms", false);
+      if (n === -1) {
+        return this._deleteBrowserAction("transition-duration");
+      } else {
+        n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
+        return this._setBrowser('transition-duration', "" + n + "ms", false);
+      }
     };
     /*
       ---------------------------------
@@ -635,8 +659,12 @@
       if (n == null) {
         n = 500;
       }
-      n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
-      return this._setBrowser('animation-duration', "" + n + "ms", false);
+      if (n === -1) {
+        return this._deleteBrowserAction("animation-duration");
+      } else {
+        n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
+        return this._setBrowser('animation-duration', "" + n + "ms", false);
+      }
     };
     Coffeefx.prototype.iteration = function(n) {
       return this._setBrowser('animation-iteration-count', n, false);
@@ -647,9 +675,13 @@
       }
       return this._setBrowser('animation-timing-function', fn, false);
     };
+    Coffeefx.prototype.fillmode = function(fn) {
+      return this._setBrowser('animation-fill-mode', fn, false);
+    };
     return Coffeefx;
   })();
   window.Caffea = Caffea = (function() {
+    var css_values;
     function Caffea(objects) {
       this.objects = objects != null ? objects : [];
     }
@@ -660,8 +692,15 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         object = _ref[_i];
         this.cfx = coffeefx(object["id"]);
-        this._init(object["id"], object["init"]);
-        this._transformation(object["id"], object["transformation"]);
+        if (object["init"] !== void 0) {
+          this._init(object["id"], object["init"]);
+        }
+        if (object["transformation"] !== void 0) {
+          this._transformation(object["transformation"]);
+        }
+        if (object["animation"] !== void 0) {
+          this._animation(object["animation"]);
+        }
         console.log(this.cfx);
         _results.push(this.cfx.end());
       }
@@ -674,18 +713,46 @@
         value = object_init[key];
         this.cfx.set(key, value);
       }
-      this.cfx.duration(0);
+      this.cfx.duration(-1);
       this.cfx._addCssClass(this.cfx._context, this.cfx._prepare().replace(/^./, ""));
       return this.cfx = coffeefx(object);
     };
-    Caffea.prototype._transformation = function(object, object_trans) {
+    Caffea.prototype._set = function(cfx, key, value) {
+      if ((__indexOf.call(css_values, key) >= 0)) {
+        return cfx.set(key, value);
+      } else {
+        return cfx[key](value);
+      }
+    };
+    Caffea.prototype._transformation = function(object_trans) {
       var key, value;
       for (key in object_trans) {
         value = object_trans[key];
-        this.cfx[key]([value]);
+        this._set(this.cfx, key, value);
       }
       return this.cfx;
     };
+    Caffea.prototype._animation = function(object_animation) {
+      var cfx, key, step, step_values, value, _results;
+      _results = [];
+      for (step in object_animation) {
+        step_values = object_animation[step];
+        _results.push((function() {
+          if (step === 'from' || step === 'to') {
+            cfx = this.cfx[step]();
+            for (key in step_values) {
+              value = step_values[key];
+              this._set(cfx, key, value);
+            }
+            return this.cfx = cfx.pop();
+          } else {
+            return this._set(this.cfx, step, step_values);
+          }
+        }).call(this));
+      }
+      return _results;
+    };
+    css_values = ['azimuth', 'background', 'background-attachment', 'background-color', 'background-image', 'background-position', 'background-repeat', 'border', 'border-bottom', 'border-bottom-color', 'border-bottom-style', 'border-bottom-width', 'border-collapse', 'border-color', 'border-left', 'border-left-color', 'border-left-style', 'border-left-width', 'border-right', 'border-right-color', 'border-right-style', 'border-right-width', 'border-spacing', 'border-style', 'border-top', 'border-top-color', 'border-top-style', 'border-top-width', 'border-width', 'bottom', 'caption-side', 'clear', 'clip', 'color', 'content', 'counter-increment', 'counter-reset', 'cue', 'cue-after', 'cue-before', 'cursor', 'direction', 'display', 'elevation', 'empty-cells', 'float', 'font', 'font-family', 'font-size', 'font-style', 'font-variant', 'font-weight', 'height', 'left', 'letter-spacing', 'line-height', 'list-style', 'list-style-image', 'list-style-position', 'list-style-type', 'margin', 'margin-bottom', 'margin-left', 'margin-right', 'margin-top', 'max-height', 'max-width', 'min-height', 'min-width', 'opacity', 'orphans', 'outline', 'outline-color', 'outline-style', 'outline-width', 'overflow', 'padding', 'padding-bottom', 'padding-left', 'padding-right', 'padding-top', 'page-break-after', 'page-break-before', 'page-break-inside', 'pause', 'pause-after', 'pause-before', 'pitch', 'pitch-range', 'play-during', 'position', 'quotes', 'richness', 'right', 'speak', 'speak-header', 'speak-numeral', 'speak-punctuation', 'speech-rate', 'stress', 'table-layout', 'text-align', 'text-decoration', 'text-indent', 'text-transform', 'top', 'unicode-bidi', 'vertical-align', 'visibility', 'voice-family', 'volume', 'white-space', 'widows', 'width', 'word-spacing', 'z-index'];
     return Caffea;
   })();
 }).call(this);

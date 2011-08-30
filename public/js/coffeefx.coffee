@@ -193,6 +193,9 @@ window.Coffeefx = class Coffeefx
     @api private
   ---------------------------------
   ###
+  _deleteBrowserAction: (action) ->
+      delete @context()[brow+action] if @context()[brow+action] != undefined for brow in browsers
+
   _setBrowser: (action, value, sum=true) ->
     for brow in browsers
       val = if @context()[brow+action] == undefined then "" else @context()[brow+action]
@@ -350,7 +353,7 @@ window.Coffeefx = class Coffeefx
       @_addCssClass(@_context, @_prepare())
       @el.style.webkitAnimationName = ''; 
       window.setTimeout( (-> self.el.style.webkitAnimationName = self._context), 0);
-      @el.className += " #{@_context}"
+      @el.className = "#{@_context}"
     @
   
   
@@ -555,8 +558,11 @@ window.Coffeefx = class Coffeefx
   ###
 
   transitionDuration: (n=500) ->
-    n = if 'string' == typeof n then parseFloat(n) * 1000 else n
-    @_setBrowser('transition-duration', "#{n}ms", false)
+    if n == -1
+      @_deleteBrowserAction("transition-duration")
+    else
+      n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+      @_setBrowser('transition-duration', "#{n}ms", false)
 
   ###
   ---------------------------------
@@ -649,13 +655,19 @@ window.Coffeefx = class Coffeefx
     @animationDuration(n)
   
   animationDuration: (n=500) ->
-    n = if 'string' == typeof n then parseFloat(n) * 1000 else n
-    @_setBrowser('animation-duration', "#{n}ms", false)
+    if n == -1
+      @_deleteBrowserAction("animation-duration")
+    else
+      n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+      @_setBrowser('animation-duration', "#{n}ms", false)
   
   iteration: (n) -> @_setBrowser('animation-iteration-count', n, false)
   
   timing: (fn = "linear") ->
     @_setBrowser('animation-timing-function', fn, false)
+
+  fillmode: (fn) ->
+    @_setBrowser('animation-fill-mode', fn, false)
 
 
 ##################################################################
@@ -688,6 +700,13 @@ window.Coffeefx = class Coffeefx
 #       "margin-left": "200px", 
 #     },
 #     "transition": {  "X": "500px", "opacity": "500px",}
+#     "animation": {  
+#         "from":{
+#           "X": "500px"; 
+#           "opacity": "500px",
+#         }
+#         
+#       }
 #   }
 # ]
 
@@ -697,8 +716,9 @@ window.Caffea = class Caffea
   execute: () ->
     for object in @objects
       @cfx = coffeefx(object["id"])
-      @_init(object["id"], object["init"])
-      @_transformation(object["id"], object["transformation"])
+      @_init(object["id"], object["init"]) if object["init"] != undefined
+      @_transformation(object["transformation"]) if object["transformation"] != undefined
+      @_animation(object["animation"]) if object["animation"] != undefined
       console.log @cfx
       @cfx.end()
   
@@ -706,11 +726,146 @@ window.Caffea = class Caffea
   _init: (object, object_init) ->
     @cfx._context = object
     @cfx.set(key, value) for key, value of object_init
-    @cfx.duration(0)
+    @cfx.duration(-1)
     @cfx._addCssClass(@cfx._context, @cfx._prepare().replace(/^./, ""))
+    
     #returning a clean one
     @cfx = coffeefx(object)
   
-  _transformation: (object, object_trans) ->
-    @cfx[key]([value]) for key, value of object_trans
+  _set: (cfx, key, value) ->
+    if (key in css_values)
+      cfx.set(key, value)
+    else
+      cfx[key](value)
+
+  _transformation: (object_trans) ->
+    @_set(@cfx, key, value) for key, value of object_trans
     @cfx
+  
+  _animation:  (object_animation) ->
+    for step, step_values of object_animation
+      if step in ['from', 'to']
+        cfx = @cfx[step]()
+        @_set(cfx, key, value) for key, value of step_values
+        @cfx = cfx.pop()
+      else
+        @_set(@cfx, step, step_values)
+  
+  css_values = [
+        'azimuth',
+        'background',
+        'background-attachment',
+        'background-color',
+        'background-image',
+        'background-position',
+        'background-repeat',
+        'border',
+        'border-bottom',
+        'border-bottom-color',
+        'border-bottom-style',
+        'border-bottom-width',
+        'border-collapse',
+        'border-color',
+        'border-left',
+        'border-left-color',
+        'border-left-style',
+        'border-left-width',
+        'border-right',
+        'border-right-color',
+        'border-right-style',
+        'border-right-width',
+        'border-spacing',
+        'border-style',
+        'border-top',
+        'border-top-color',
+        'border-top-style',
+        'border-top-width',
+        'border-width',
+        'bottom',
+        'caption-side',
+        'clear',
+        'clip',
+        'color',
+        'content',
+        'counter-increment',
+        'counter-reset',
+        'cue',
+        'cue-after',
+        'cue-before',
+        'cursor',
+        'direction',
+        'display',
+        'elevation',
+        'empty-cells',
+        'float',
+        'font',
+        'font-family',
+        'font-size',
+        'font-style',
+        'font-variant',
+        'font-weight',
+        'height',
+        'left',
+        'letter-spacing',
+        'line-height',
+        'list-style',
+        'list-style-image',
+        'list-style-position',
+        'list-style-type',
+        'margin',
+        'margin-bottom',
+        'margin-left',
+        'margin-right',
+        'margin-top',
+        'max-height',
+        'max-width',
+        'min-height',
+        'min-width',
+        'opacity',
+        'orphans',
+        'outline',
+        'outline-color',
+        'outline-style',
+        'outline-width',
+        'overflow',
+        'padding',
+        'padding-bottom',
+        'padding-left',
+        'padding-right',
+        'padding-top',
+        'page-break-after',
+        'page-break-before',
+        'page-break-inside',
+        'pause',
+        'pause-after',
+        'pause-before',
+        'pitch',
+        'pitch-range',
+        'play-during',
+        'position',
+        'quotes',
+        'richness',
+        'right',
+        'speak',
+        'speak-header',
+        'speak-numeral',
+        'speak-punctuation',
+        'speech-rate',
+        'stress',
+        'table-layout',
+        'text-align',
+        'text-decoration',
+        'text-indent',
+        'text-transform',
+        'top',
+        'unicode-bidi',
+        'vertical-align',
+        'visibility',
+        'voice-family',
+        'volume',
+        'white-space',
+        'widows',
+        'width',
+        'word-spacing',
+        'z-index',
+    ]

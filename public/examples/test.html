@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <title>CoffeeScript Test</title>
+  <script src="../../../others/coffee-script.js"></script>
+  <script src="../js/coffeefx.js"></script>
+  <style>
+    body {
+      margin: 30px;
+      font-family: Menlo, Monaco, monospace;
+    }
+    #wrapper {
+        margin: 0px;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    #box{
+      width: 100px;
+      height: 100px;
+      border: 2px black solid;
+    }
+    #legend {
+      color:gray;
+      font-size:12px;
+    }
+    #box { margin-left:200px; }
+    .logo_691413 { 
+      -webkit-animation-fill-mode:forwards;
+      -webkit-transition-duration:2000ms; -moz-transition-duration:2000ms; -ms-transition-duration:2000ms; -o-transition-duration:2000ms; -webkit-animation-duration:2000ms; -moz-animation-duration:2000ms; -ms-animation-duration:2000ms; -o-animation-duration:2000ms; -webkit-animation-name:logo_691413; -moz-animation-name:logo_691413; -ms-animation-name:logo_691413; -o-animation-name:logo_691413; } 
+      @-webkit-keyframes logo_691413  { 
+        from { 
+        -webkit-transform:scale(1,1) ; 
+        margin-top:0px; 
+      }
+        to { 
+          -webkit-transform:scale(1,  1) ; 
+          margin-top:700px; 
+        } 
+      } 
+  </style>
+  <script type="text/coffeescript">
+      window.box = () -> 
+        #caffea = new Caffea([{ "object" : "vao", "id" : "#box", "init" : { "visibility":"visible", "margin-top": "1800px", "margin-left": "200px"}, 
+        #"animation" : { "duration": 4000, "iteration":"infinite", "timing":"linear", "to": {"margin-top":-100, "ease":"cubic-bezier(0,2,2,0)"}  }},])
+        caffea = new Caffea([{ "object" : "vao", "id" : "#box", "init" : { "visibility":"visible", "margin-top": "1800px", "margin-left": "200px"}, 
+        "transformation" : { "duration": 4000, "margin-top":-100, "ease":"cubic-bezier(0,2,2,0)"  }},])
+        caffea.execute()
+        #coffeefx('.box').rotate(360).transitionDuration('3s').end(-> alert("test"))
+  </script>
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div id="box" onclick="className='logo_691413'"><a href="#" >HOLA</a></div>
+    <a href="#" onclick="box()">DOS</a>
+</div>
+<div id="legend">
+  coffeefx('.box').rotate(360).transitionDuration(100).end()
+</div>
+</body>
+</html>
