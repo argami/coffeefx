@@ -181,11 +181,11 @@
       _ref = this._baseContext();
       for (key in _ref) {
         value = _ref[key];
-        val = JSON.stringify(value).replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";").replace(/,/g, "; ");
+        val = JSON.stringify(value).replace(/","/g, "\"; \"").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{", "").replace("}", ";");
         if (key === "class") {
           text += "." + this._context + " { " + val + " }";
         } else {
-          keyframe += "" + key + " { " + val + " }";
+          keyframe += " " + key + " { " + val + " }";
         }
       }
       if (keyframe !== "") {

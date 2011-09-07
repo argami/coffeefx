@@ -221,11 +221,11 @@ window.Coffeefx = class Coffeefx
     text = ""
     keyframe = ""
     for key, value of @_baseContext()
-      val = JSON.stringify(value).replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";").replace(/,/g,"; ")
+      val = JSON.stringify(value).replace(/","/g,"\"; \"").replace(/"/gi, "").replace(/"}"/gi, ";").replace("{","").replace("}",";")
       if key == "class"
         text += ".#{@_context} { #{val} }"
       else
-        keyframe += "#{key} { #{val} }"
+        keyframe += " #{key} { #{val} }"
 
     if keyframe!=""
       text += " @#{key}keyframes #{@_context}  { #{keyframe} } " for key in browsers 
