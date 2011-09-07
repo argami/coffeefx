@@ -42,7 +42,8 @@
 ##################################################################################
 
 
-window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-']
+#window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-']
+window.browsers = ['-webkit-']
 
 #----------------------------------------#
 # Initialize a `coffeefx` instance 

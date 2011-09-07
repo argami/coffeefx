@@ -6,7 +6,7 @@
     }
     return -1;
   };
-  window.browsers = ['-webkit-', '-moz-', '-ms-', '-o-'];
+  window.browsers = ['-webkit-'];
   window.coffeefx = function(selector) {
     return new Coffeefx(selector);
   };
