@@ -359,6 +359,9 @@
         @api public
       ---------------------------------
       */
+    Coffeefx.prototype["transform-style"] = function(style) {
+      return this.transformStyle(style);
+    };
     Coffeefx.prototype.transformStyle = function(style) {
       if (style === 'flat' || style === 'preserve-3d') {
         return this._setBrowser('transform-style', style, false);
@@ -388,6 +391,12 @@
         @api public
       ---------------------------------
       */
+    Coffeefx.prototype["transform-origin"] = function(n) {
+      if (n == null) {
+        n = 50;
+      }
+      return this.origin(n);
+    };
     Coffeefx.prototype.origin = function(n) {
       if (n == null) {
         n = 50;
@@ -553,6 +562,12 @@
         @api public
       ---------------------------------
       */
+    Coffeefx.prototype["transition-duration"] = function(n) {
+      if (n == null) {
+        n = 500;
+      }
+      return this.transitionDuration(n);
+    };
     Coffeefx.prototype.transitionDuration = function(n) {
       if (n == null) {
         n = 500;
@@ -608,6 +623,9 @@
         @api public
       ---------------------------------
       */
+    Coffeefx.prototype["transition-timing-function"] = function(fn) {
+      return this.ease(fn);
+    };
     Coffeefx.prototype.ease = function(fn) {
       return this._setBrowser('transition-timing-function', coffeefx.ease[fn] || fn || 'ease');
     };
@@ -621,6 +639,9 @@
       #  * @api public
       ---------------------------------
       */
+    Coffeefx.prototype["transition-delay"] = function(n) {
+      return this.delay(n);
+    };
     Coffeefx.prototype.delay = function(n) {
       n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
       return this._setBrowser('transition-delay', "" + n + "ms");
@@ -660,6 +681,12 @@
       this.transitionDuration(n);
       return this.animationDuration(n);
     };
+    Coffeefx.prototype["animation-duration"] = function(n) {
+      if (n == null) {
+        n = 500;
+      }
+      return this.animationDuration(n);
+    };
     Coffeefx.prototype.animationDuration = function(n) {
       if (n == null) {
         n = 500;
@@ -671,14 +698,26 @@
         return this._setBrowser('animation-duration', "" + n + "ms", false);
       }
     };
+    Coffeefx.prototype["animation-iteration-count"] = function(n) {
+      return this.iteration(n);
+    };
     Coffeefx.prototype.iteration = function(n) {
       return this._setBrowser('animation-iteration-count', n, false);
+    };
+    Coffeefx.prototype["animation-timing-function"] = function(fn) {
+      if (fn == null) {
+        fn = "linear";
+      }
+      return this.timing(fn);
     };
     Coffeefx.prototype.timing = function(fn) {
       if (fn == null) {
         fn = "linear";
       }
       return this._setBrowser('animation-timing-function', fn, false);
+    };
+    Coffeefx.prototype["animation-fill-mode"] = function(fn) {
+      return this.fillmode(fn);
     };
     Coffeefx.prototype.fillmode = function(fn) {
       return this._setBrowser('animation-fill-mode', fn, false);

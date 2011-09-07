@@ -373,6 +373,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
+  "transform-style": (style) -> @transformStyle(style)
   transformStyle: (style) -> @_setBrowser('transform-style', style, false) if style in ['flat', 'preserve-3d']
 
   ###
@@ -397,6 +398,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
+  "transform-origin": (n=50) -> @origin(n)
   origin: (n=50) -> @_setBrowser('transform-origin', "#{n}%", false)
 
   ###
@@ -557,6 +559,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
+  "transition-duration": (n=500) -> @transitionDuration(n)
   transitionDuration: (n=500) ->
     if n == -1
       @_deleteBrowserAction("transition-duration")
@@ -609,6 +612,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
+  "transition-timing-function": (fn) -> @ease(fn)
   ease: (fn) -> @_setBrowser('transition-timing-function',  coffeefx.ease[fn] || fn || 'ease')
   
   ###
@@ -622,6 +626,7 @@ window.Coffeefx = class Coffeefx
   ---------------------------------
   ###
 
+  "transition-delay": (n) -> @delay(n)
   delay: (n) ->
     n = if 'string' == typeof n then parseFloat(n) * 1000 else n
     @_setBrowser('transition-delay', "#{n}ms")
@@ -660,6 +665,7 @@ window.Coffeefx = class Coffeefx
     @transitionDuration(n)
     @animationDuration(n)
   
+  "animation-duration": (n=500) -> @animationDuration(n)
   animationDuration: (n=500) ->
     if n == -1
       @_deleteBrowserAction("animation-duration")
@@ -667,11 +673,15 @@ window.Coffeefx = class Coffeefx
       n = if 'string' == typeof n then parseFloat(n) * 1000 else n
       @_setBrowser('animation-duration', "#{n}ms", false)
   
+  "animation-iteration-count": (n) -> @iteration(n)
   iteration: (n) -> @_setBrowser('animation-iteration-count', n, false)
   
+
+  "animation-timing-function": (fn = "linear") -> @timing(fn)
   timing: (fn = "linear") ->
     @_setBrowser('animation-timing-function', fn, false)
 
+  "animation-fill-mode": (fn) -> @fillmode(fn)
   fillmode: (fn) ->
     @_setBrowser('animation-fill-mode', fn, false)
 
