@@ -732,8 +732,12 @@ window.Coffea = class Coffea
     if (key in css_values)
       cfx.set(key, value)
     else
-      cfx[key](value)
-
+      if typeof(value) == "string" 
+        cfx[key].apply(cfx, value.split(","))
+      else
+        cfx[key](value)
+        
+      
   _transformation: (object_trans) ->
     @_set(@cfx, key, value) for key, value of object_trans
     @cfx

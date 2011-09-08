@@ -26,13 +26,34 @@
       color:gray;
       font-size:12px;
     }
+
+    .box_293502 { 
+      -webkit-animation-name:box_293502; 
+      -webkit-animation-duration:3000ms; 
+      
+    } 
+    @-webkit-keyframes box_293502  {  
+      from { 
+        -webkit-transform:translateX(0px) ; 
+        -webkit-animation-duration:3000ms; 
+      } 
+      60.5% { 
+        -webkit-transform:translateY(100px) translateX(250px); 
+        -webkit-animation-duration:3000ms; 
+      } 
+      to { 
+        -webkit-transform:translateX(400px) ; 
+        -webkit-animation-duration:3000ms; 
+      } 
+    }
+
   </style>
   <script type="text/coffeescript">
       window.normal_coffee = () -> 
         coffeefx('#box').duration('3s').from().x(0).pop().step('50%').y(100).x(250).pop().to().x(400).pop().end()
       window.coffeax = () -> 
         content = { "object":"box", "id":"#box", "animation": {"duration":5000, "fillmode":"forward", 
-        "from": { "x":0 },
+        "from": { "x":0, "translate":"100,100" },
         "50%":{ "y":100, "x":250  },
         "to":{ "x":400}
         } }
@@ -45,7 +66,7 @@
 
 
 <div id="wrapper">
-    <div id="box" onclick="className='logo_691413'"><a href="#" >HOLA</a></div>
+    <div id="box" onclick="className='box_293502'"><a href="#" >HOLA</a></div>
     <a href="#" onclick="normal_coffee()">normal coffee</a>
     <a href="#" onclick="coffeax()">coffea</a>
 </div>

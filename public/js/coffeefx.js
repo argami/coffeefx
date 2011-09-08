@@ -781,7 +781,11 @@
       if ((__indexOf.call(css_values, key) >= 0)) {
         return cfx.set(key, value);
       } else {
-        return cfx[key](value);
+        if (typeof value === "string") {
+          return cfx[key].apply(cfx, value.split(","));
+        } else {
+          return cfx[key](value);
+        }
       }
     };
     Coffea.prototype._transformation = function(object_trans) {
