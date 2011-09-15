@@ -685,6 +685,12 @@ window.Coffeefx = class Coffeefx
 
   "animation-fill-mode": (fn) -> @fillmode(fn)
   fillmode: (fn) -> @_setBrowser('animation-fill-mode', fn, false)
+  
+  "animation-delay": (n) -> @delay(n)
+  animation_delay: (n) ->
+    n = if 'string' == typeof n then n else "#{n}ms"
+    @_setBrowser('animation-delay', "#{n}ms")
+  
 
   save: () -> 
     result = {}
