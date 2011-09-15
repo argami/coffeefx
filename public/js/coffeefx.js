@@ -723,11 +723,11 @@
       return this._setBrowser('animation-fill-mode', fn, false);
     };
     Coffeefx.prototype["animation-delay"] = function(n) {
-      return this.delay(n);
+      return this.animation_delay(n);
     };
     Coffeefx.prototype.animation_delay = function(n) {
       n = 'string' === typeof n ? n : "" + n + "ms";
-      return this._setBrowser('animation-delay', "" + n + "ms");
+      return this._setBrowser('animation-delay', n);
     };
     Coffeefx.prototype.save = function() {
       var key, result, value, _ref;
