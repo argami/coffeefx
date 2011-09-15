@@ -565,8 +565,9 @@ window.Coffeefx = class Coffeefx
     if n == -1
       @_deleteBrowserAction("transition-duration")
     else
-      n = if 'string' == typeof n then parseFloat(n) * 1000 else n
-      @_setBrowser('transition-duration', "#{n}ms", false)
+      #n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+      n = if 'string' == typeof n then n else "#{n}ms"
+      @_setBrowser('transition-duration', n, false)
 
   ###
   ---------------------------------
@@ -671,22 +672,30 @@ window.Coffeefx = class Coffeefx
     if n == -1
       @_deleteBrowserAction("animation-duration")
     else
-      n = if 'string' == typeof n then parseFloat(n) * 1000 else n
-      @_setBrowser('animation-duration', "#{n}ms", false)
+      #n = if 'string' == typeof n then parseFloat(n) * 1000 else n
+      #@_setBrowser('animation-duration', "#{n}ms", false)
+      n = if 'string' == typeof n then n else "#{n}ms"
+      @_setBrowser('animation-duration', n, false)
   
   "animation-iteration-count": (n) -> @iteration(n)
   iteration: (n) -> @_setBrowser('animation-iteration-count', n, false)
   
-
   "animation-timing-function": (fn = "linear") -> @timing(fn)
-  timing: (fn = "linear") ->
-    @_setBrowser('animation-timing-function', fn, false)
+  timing: (fn = "linear") -> @_setBrowser('animation-timing-function', fn, false)
 
   "animation-fill-mode": (fn) -> @fillmode(fn)
-  fillmode: (fn) ->
-    @_setBrowser('animation-fill-mode', fn, false)
+  fillmode: (fn) -> @_setBrowser('animation-fill-mode', fn, false)
 
-
+  save: () -> 
+    result = {}
+    result["id"] = @_selector
+    result["animation"] = @_baseContext()["class"]
+    for key,value of @_baseContext() 
+      result["animation"][key] = value if key != "class"
+          
+    #if key != "class" then result["animation"][key] = value for key,value of @_baseContext() #if key != "class"
+    JSON.parse(JSON.stringify(result).replace(/-webkit-/gi, ''))
+  
 ##################################################################
 # Animation
 ##################################################################
@@ -729,7 +738,7 @@ window.Coffea = class Coffea
     @cfx = coffeefx(object)
   
   _set: (cfx, key, value) ->
-    if (key in css_values)
+    if typeof cfx[key] != 'function' #(key in css_values)
       cfx.set(key, value)
     else
       if typeof(value) == "string" 
@@ -750,122 +759,3 @@ window.Coffea = class Coffea
         @cfx = cfx.pop()
       else
         @_set(@cfx, step, step_values)
-  
-  css_values = [
-        'azimuth',
-        'background',
-        'background-attachment',
-        'background-color',
-        'background-image',
-        'background-position',
-        'background-repeat',
-        'border',
-        'border-bottom',
-        'border-bottom-color',
-        'border-bottom-style',
-        'border-bottom-width',
-        'border-collapse',
-        'border-color',
-        'border-left',
-        'border-left-color',
-        'border-left-style',
-        'border-left-width',
-        'border-right',
-        'border-right-color',
-        'border-right-style',
-        'border-right-width',
-        'border-spacing',
-        'border-style',
-        'border-top',
-        'border-top-color',
-        'border-top-style',
-        'border-top-width',
-        'border-width',
-        'bottom',
-        'caption-side',
-        'clear',
-        'clip',
-        'color',
-        'content',
-        'counter-increment',
-        'counter-reset',
-        'cue',
-        'cue-after',
-        'cue-before',
-        'cursor',
-        'direction',
-        'display',
-        'elevation',
-        'empty-cells',
-        'float',
-        'font',
-        'font-family',
-        'font-size',
-        'font-style',
-        'font-variant',
-        'font-weight',
-        'height',
-        'left',
-        'letter-spacing',
-        'line-height',
-        'list-style',
-        'list-style-image',
-        'list-style-position',
-        'list-style-type',
-        'margin',
-        'margin-bottom',
-        'margin-left',
-        'margin-right',
-        'margin-top',
-        'max-height',
-        'max-width',
-        'min-height',
-        'min-width',
-        'opacity',
-        'orphans',
-        'outline',
-        'outline-color',
-        'outline-style',
-        'outline-width',
-        'overflow',
-        'padding',
-        'padding-bottom',
-        'padding-left',
-        'padding-right',
-        'padding-top',
-        'page-break-after',
-        'page-break-before',
-        'page-break-inside',
-        'pause',
-        'pause-after',
-        'pause-before',
-        'pitch',
-        'pitch-range',
-        'play-during',
-        'position',
-        'quotes',
-        'richness',
-        'right',
-        'speak',
-        'speak-header',
-        'speak-numeral',
-        'speak-punctuation',
-        'speech-rate',
-        'stress',
-        'table-layout',
-        'text-align',
-        'text-decoration',
-        'text-indent',
-        'text-transform',
-        'top',
-        'unicode-bidi',
-        'vertical-align',
-        'visibility',
-        'voice-family',
-        'volume',
-        'white-space',
-        'widows',
-        'width',
-        'word-spacing',
-        'z-index',
-    ]

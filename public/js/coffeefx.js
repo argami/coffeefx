@@ -575,8 +575,8 @@
       if (n === -1) {
         return this._deleteBrowserAction("transition-duration");
       } else {
-        n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
-        return this._setBrowser('transition-duration', "" + n + "ms", false);
+        n = 'string' === typeof n ? n : "" + n + "ms";
+        return this._setBrowser('transition-duration', n, false);
       }
     };
     /*
@@ -694,8 +694,8 @@
       if (n === -1) {
         return this._deleteBrowserAction("animation-duration");
       } else {
-        n = 'string' === typeof n ? parseFloat(n) * 1000 : n;
-        return this._setBrowser('animation-duration', "" + n + "ms", false);
+        n = 'string' === typeof n ? n : "" + n + "ms";
+        return this._setBrowser('animation-duration', n, false);
       }
     };
     Coffeefx.prototype["animation-iteration-count"] = function(n) {
@@ -722,6 +722,20 @@
     Coffeefx.prototype.fillmode = function(fn) {
       return this._setBrowser('animation-fill-mode', fn, false);
     };
+    Coffeefx.prototype.save = function() {
+      var key, result, value, _ref;
+      result = {};
+      result["id"] = this._selector;
+      result["animation"] = this._baseContext()["class"];
+      _ref = this._baseContext();
+      for (key in _ref) {
+        value = _ref[key];
+        if (key !== "class") {
+          result["animation"][key] = value;
+        }
+      }
+      return JSON.parse(JSON.stringify(result).replace(/-webkit-/gi, ''));
+    };
     return Coffeefx;
   })();
   window.coffea = function(objects) {
@@ -741,7 +755,6 @@
     };
   };
   window.Coffea = Coffea = (function() {
-    var css_values;
     function Coffea(objects) {
       this.objects = objects != null ? objects : [];
     }
@@ -778,7 +791,7 @@
       return this.cfx = coffeefx(object);
     };
     Coffea.prototype._set = function(cfx, key, value) {
-      if ((__indexOf.call(css_values, key) >= 0)) {
+      if (typeof cfx[key] !== 'function') {
         return cfx.set(key, value);
       } else {
         if (typeof value === "string") {
@@ -816,7 +829,6 @@
       }
       return _results;
     };
-    css_values = ['azimuth', 'background', 'background-attachment', 'background-color', 'background-image', 'background-position', 'background-repeat', 'border', 'border-bottom', 'border-bottom-color', 'border-bottom-style', 'border-bottom-width', 'border-collapse', 'border-color', 'border-left', 'border-left-color', 'border-left-style', 'border-left-width', 'border-right', 'border-right-color', 'border-right-style', 'border-right-width', 'border-spacing', 'border-style', 'border-top', 'border-top-color', 'border-top-style', 'border-top-width', 'border-width', 'bottom', 'caption-side', 'clear', 'clip', 'color', 'content', 'counter-increment', 'counter-reset', 'cue', 'cue-after', 'cue-before', 'cursor', 'direction', 'display', 'elevation', 'empty-cells', 'float', 'font', 'font-family', 'font-size', 'font-style', 'font-variant', 'font-weight', 'height', 'left', 'letter-spacing', 'line-height', 'list-style', 'list-style-image', 'list-style-position', 'list-style-type', 'margin', 'margin-bottom', 'margin-left', 'margin-right', 'margin-top', 'max-height', 'max-width', 'min-height', 'min-width', 'opacity', 'orphans', 'outline', 'outline-color', 'outline-style', 'outline-width', 'overflow', 'padding', 'padding-bottom', 'padding-left', 'padding-right', 'padding-top', 'page-break-after', 'page-break-before', 'page-break-inside', 'pause', 'pause-after', 'pause-before', 'pitch', 'pitch-range', 'play-during', 'position', 'quotes', 'richness', 'right', 'speak', 'speak-header', 'speak-numeral', 'speak-punctuation', 'speech-rate', 'stress', 'table-layout', 'text-align', 'text-decoration', 'text-indent', 'text-transform', 'top', 'unicode-bidi', 'vertical-align', 'visibility', 'voice-family', 'volume', 'white-space', 'widows', 'width', 'word-spacing', 'z-index'];
     return Coffea;
   })();
 }).call(this);
