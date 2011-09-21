@@ -742,8 +742,8 @@
       this.actions[action] = _function;
       return this;
     };
-    Coffeefx.prototype.save = function() {
-      var key, result, value, _ref;
+    Coffeefx.prototype.save = function(url, loc) {
+      var JSONstring, key, request, result, value, _ref;
       result = {};
       result["id"] = this._selector;
       result["animation"] = this._baseContext()["class"];
@@ -754,7 +754,12 @@
           result["animation"][key] = value;
         }
       }
-      return JSON.parse(JSON.stringify(result).replace(/-webkit-/gi, ''));
+      result["project_page"] = loc;
+      JSONstring = JSON.stringify(result).replace(/-webkit-/gi, '');
+      request = new XMLHttpRequest();
+      request.open("GET", ("" + url + "?json=") + btoa(JSONstring), true);
+      request.send(null);
+      return JSON.parse(JSONstring);
     };
     return Coffeefx;
   })();

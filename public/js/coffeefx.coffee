@@ -702,16 +702,23 @@ window.Coffeefx = class Coffeefx
     @
   
 
-  save: () -> 
+  save: (url, loc) -> 
     result = {}
     result["id"] = @_selector
     result["animation"] = @_baseContext()["class"]
     for key,value of @_baseContext() 
       result["animation"][key] = value if key != "class"
           
-    #if key != "class" then result["animation"][key] = value for key,value of @_baseContext() #if key != "class"
-    JSON.parse(JSON.stringify(result).replace(/-webkit-/gi, ''))
-  
+    result["project_page"] = loc #proyecto.page
+    
+    JSONstring = JSON.stringify(result).replace(/-webkit-/gi, '')
+    request = new XMLHttpRequest();
+    # request.onreadystatechange = sendData;
+    request.open("GET", "#{url}?json="+btoa(JSONstring), true);
+    request.send(null)
+    
+    JSON.parse(JSONstring)
+    
 ##################################################################
 # Animation
 ##################################################################
