@@ -50,6 +50,7 @@
       this._context = void 0;
       this._baseContext();
       this.callbacks = [];
+      this.actions = {};
       if (this.el !== void 0) {
         this.duration();
       }
@@ -309,13 +310,18 @@
       ---------------------------------
       */
     Coffeefx.prototype.end = function(event) {
-      var prop, self, value, _ref;
+      var action, prop, self, value, _function, _ref, _ref2;
       if (event == null) {
         event = void 0;
       }
       self = this;
       if (event) {
         this.then(event);
+      }
+      _ref = this.actions;
+      for (action in _ref) {
+        _function = _ref[action];
+        this.el.setAttribute(action, _function);
       }
       if (this.context()['-webkit-animation-name'] === void 0) {
         this.el.addEventListener('webkitTransitionEnd', (function() {
@@ -326,9 +332,9 @@
           }
           return _results;
         }), false);
-        _ref = this.context();
-        for (prop in _ref) {
-          value = _ref[prop];
+        _ref2 = this.context();
+        for (prop in _ref2) {
+          value = _ref2[prop];
           this.el.style.setProperty(prop, value, '');
         }
       } else {
@@ -729,6 +735,13 @@
       n = 'string' === typeof n ? n : "" + n + "ms";
       return this._setBrowser('animation-delay', n);
     };
+    Coffeefx.prototype["add-action"] = function(action, _function) {
+      return this.add_action(action, _function);
+    };
+    Coffeefx.prototype.add_action = function(action, _function) {
+      this.actions[action] = _function;
+      return this;
+    };
     Coffeefx.prototype.save = function() {
       var key, result, value, _ref;
       result = {};
@@ -779,6 +792,9 @@
         if (object["transformation"] !== void 0) {
           this._transformation(object["transformation"]);
         }
+        if (object["actions"] !== void 0) {
+          this._actions(object["actions"]);
+        }
         if (object["animation"] !== void 0) {
           this._animation(object["animation"]);
         }
@@ -807,6 +823,14 @@
           return cfx[key](value);
         }
       }
+    };
+    Coffea.prototype._actions = function(object_actions) {
+      var key, value;
+      for (key in object_actions) {
+        value = object_actions[key];
+        this.cfx.add_action(key, value);
+      }
+      return this.cfx;
     };
     Coffea.prototype._transformation = function(object_trans) {
       var key, value;

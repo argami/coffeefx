@@ -120,6 +120,7 @@ window.Coffeefx = class Coffeefx
     @_context = undefined
     @_baseContext()
     @callbacks = []
+    @actions = {}
     if @el != undefined
       @duration() #add the transitionDuration as default
     
@@ -344,6 +345,8 @@ window.Coffeefx = class Coffeefx
     self = @
     @then(event) if event
 
+    @el.setAttribute(action, _function) for action, _function of @actions
+    
     #transformation
     if @context()['-webkit-animation-name'] == undefined
       @el.addEventListener( 'webkitTransitionEnd', (->  self.callbacks.shift().apply(self) while self.callbacks.length > 0), false)
@@ -690,6 +693,13 @@ window.Coffeefx = class Coffeefx
   animation_delay: (n) ->
     n = if 'string' == typeof n then n else "#{n}ms"
     @_setBrowser('animation-delay', n)
+    
+  ##### Actions
+  
+  "add-action": (action, _function) ->  @add_action(action, _function)
+  add_action: (action, _function) -> 
+    @actions[action] = _function
+    @
   
 
   save: () -> 
@@ -730,6 +740,7 @@ window.Coffea = class Coffea
       @cfx = coffeefx(object["id"])
       @_init(object["id"], object["init"]) if object["init"] != undefined
       @_transformation(object["transformation"]) if object["transformation"] != undefined
+      @_actions(object["actions"]) if object["actions"] != undefined
       @_animation(object["animation"]) if object["animation"] != undefined
       @cfx.end()
   
@@ -753,6 +764,10 @@ window.Coffea = class Coffea
         cfx[key](value)
         
       
+  _actions: (object_actions) ->
+    @cfx.add_action(key, value) for key, value of object_actions
+    @cfx
+
   _transformation: (object_trans) ->
     @_set(@cfx, key, value) for key, value of object_trans
     @cfx
