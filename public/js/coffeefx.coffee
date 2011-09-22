@@ -760,7 +760,8 @@ window.Coffea = class Coffea
       else
         if Coffeelet != undefined
           cfl = new Coffeelet()
-          @_init(object, cfl["set"](value))
+          console.log value
+          @_init(object, cfl["set"](object, value))
         else 
           console.log "theres no coffee let defined"
         

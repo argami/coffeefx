@@ -817,7 +817,8 @@
         } else {
           if (Coffeelet !== void 0) {
             cfl = new Coffeelet();
-            this._init(object, cfl["set"](value));
+            console.log(value);
+            this._init(object, cfl["set"](object, value));
           } else {
             console.log("theres no coffee let defined");
           }
