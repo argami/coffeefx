@@ -5,10 +5,13 @@
   <title>CoffeeScript Test</title>
   <script src="../../../others/coffee-script.js"></script>
   <script src="../js/coffeefx.js"></script>
+  <script src="https://raw.github.com/argami/coffeelets/dev/public/js/coffeelets.js" type="text/javascript"></script>
+  
   <style>
     body {
       margin: 30px;
       font-family: Menlo, Monaco, monospace;
+              background-color:green;
     }
     #wrapper {
         margin: 0px;
@@ -18,9 +21,18 @@
         overflow: hidden;
     }
     #box{
-      width: 100px;
-      height: 100px;
-      border: 2px black solid;
+      width: 300px;
+      height:105px;
+/*      background-image: url(images/bubble.svg);
+      -webkit-background-size: 100% 100%;
+*/      
+/*      border-left:30px;
+      background-image: url(images/bubble_left.png), url(images/bubble_right.png), url(images/bubble_center.png);
+      background-repeat: no-repeat, no-repeat, no-repeat;
+      background-position: top left, top right, center center;
+      -webkit-background-size: 25px 105px, 25px 105px, 450px 105px;
+*/      
+    
     }
     #legend {
       color:gray;
@@ -48,13 +60,17 @@
       } 
     }
 
+
   </style>
+  
+  
+  
   <script type="text/coffeescript">
       window.normal_coffee = () ->
         coffea().load('http://localhost:8000/json_test')
         #coffeefx('#box').duration('3s').from().x(0).pop().step('50%').y(100).x(250).pop().to().x(400).pop().end()
       window.coffeax = () -> 
-        content = { "object":"box", "id":"#box", "animation": {"duration":5000, "fillmode":"forward", 
+        content = { "object":"box", "id":"#box", "init":{"width":500, "height":105, "coffeelet":"bubble_white"},  "animation": {"duration":5000, "fillmode":"forward", 
         "from": { "x":0, "translate":"100,100" },
         "50%":{ "y":100, "x":250  },
         "to":{ "x":400 }
@@ -62,7 +78,12 @@
         coffea = new Coffea([content])
         console.log coffea
         coffea.execute()
+      window.borde = () -> 
+        canvas = document.getElementById('canvas')
+        contexto = canvas.getContext('2d')
+        draw(contexto)
   </script>
+  
 </head>
 <body>
 
@@ -72,6 +93,25 @@
     <a href="#" onclick="normal_coffee()">normal coffee</a>
     <a href="#" onclick="coffeax()">coffea</a>
 </div>
+canvas
+<canvas id="canvas" style="width:3000px; height:500px;"></canvas>
+
+
+
+<br />
+<br />
+<br />
+<br />
+  
+SVG
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="2300" height="105" id="svg2">
+  <defs id="defs6" />
+  <path
+     d="m 72.957772,404.58306 c -6.898225,-2.83222 -14.773225,-6.43647 -17.5,-8.00944 C 42.707929,389.21874 29.003481,376.90949 20.862083,365.5 11.46444,352.32998 4.0305349,333.59342 2.016021,318 1.2539594,312.10123 1.0069743,269.5634 1.2089529,179 L 1.5,48.5 4.2288838,41.02257 C 10.828951,22.93769 25.325942,8.7464388 43.172425,2.9003441 L 50.5,0.5 l 1099.5,0 1099.5,0 7.3276,2.4003441 c 17.8465,5.8460947 32.3434,20.0373459 38.9435,38.1222259 L 2298.5,48.5 l 0.2837,122 c 0.2534,108.92046 0.112,122.77765 -1.319,129.25358 -4.6149,20.88582 -20.7576,38.35613 -41.9647,45.41609 l -7,2.33033 -1092.25,0.25363 C 236.03859,347.96731 64,348.22151 64,349.36748 c 0,3.39079 12.711248,40.19144 17.112579,49.54304 2.69484,5.72579 4.784444,10.50311 4.643565,10.61628 -0.140879,0.11316 -5.900147,-2.11152 -12.798372,-4.94374 z M 51.006274,361.13861 c -3.660149,-12.26401 -4.023922,-14.35935 -3.09308,-17.81624 1.170046,-4.34522 5.100068,-8.6334 9.401906,-10.25875 C 59.297812,332.3145 382.69035,332 1151.0159,332 c 798.1878,0 1092.3075,-0.29906 1096.1849,-1.11459 16.0115,-3.36771 29.153,-15.34923 33.8607,-30.8718 1.9274,-6.35544 1.9689,-9.47737 1.7069,-128.5659 L 2282.5,49.395412 l -3.7184,-7.523257 c -4.831,-9.774235 -11.8799,-16.823044 -21.6542,-21.653746 L 2249.6037,16.5 1150,16.5 50.396274,16.5 42.872586,20.218409 C 33.098271,25.049137 26.049365,32.097921 21.218409,41.872213 L 17.5,49.395528 17.223027,181.44776 c -0.307056,146.39452 -0.584694,139.43967 6.237918,156.25992 3.623337,8.93285 9.958727,19.07933 16.682488,26.71793 5.373676,6.10482 14.17222,13.12743 14.65029,11.69322 0.198297,-0.59489 -1.506055,-7.33599 -3.787449,-14.98022 z"
+     id="path2818"
+     style="fill:#fff" />
+</svg>
 <div id="legend">
   coffeefx('.box').rotate(360).transitionDuration(100).end()
 </div>
