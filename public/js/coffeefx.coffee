@@ -688,6 +688,9 @@ window.Coffeefx = class Coffeefx
 
   "animation-fill-mode": (fn) -> @fillmode(fn)
   fillmode: (fn) -> @_setBrowser('animation-fill-mode', fn, false)
+
+  "animation-direction": (fn) -> @direction(fn)
+  direction: (fn) -> @_setBrowser('animation-direction', fn, false)
   
   "animation-delay": (n) -> @animation_delay(n)
   animation_delay: (n) ->
@@ -738,8 +741,16 @@ window.coffea = (objects) ->
     cfa
 
 
+# window."#" = () -> console.log('test')
+
+window.animation_data = null
+
 window.Coffea = class Coffea
-  constructor: (@objects = []) ->
+  constructor: (@objects = []) -> 
+    window.animation_data = {}
+    window.animation_data[object.id] = object for object in @objects
+      
+    
   
   execute: () ->
     for object in @objects
@@ -776,7 +787,7 @@ window.Coffea = class Coffea
     if typeof cfx[key] != 'function' #(key in css_values)
       cfx.set(key, value)
     else
-      if typeof(value) == "string" 
+      if typeof(value) == "string" and value.search(/cubic/gi) == -1
         cfx[key].apply(cfx, value.split(","))
       else
         cfx[key](value)

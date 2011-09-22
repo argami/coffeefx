@@ -728,6 +728,12 @@
     Coffeefx.prototype.fillmode = function(fn) {
       return this._setBrowser('animation-fill-mode', fn, false);
     };
+    Coffeefx.prototype["animation-direction"] = function(fn) {
+      return this.direction(fn);
+    };
+    Coffeefx.prototype.direction = function(fn) {
+      return this._setBrowser('animation-direction', fn, false);
+    };
     Coffeefx.prototype["animation-delay"] = function(n) {
       return this.animation_delay(n);
     };
@@ -779,9 +785,17 @@
       }
     };
   };
+  window.animation_data = null;
   window.Coffea = Coffea = (function() {
     function Coffea(objects) {
+      var object, _i, _len, _ref;
       this.objects = objects != null ? objects : [];
+      window.animation_data = {};
+      _ref = this.objects;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        object = _ref[_i];
+        window.animation_data[object.id] = object;
+      }
     }
     Coffea.prototype.execute = function() {
       var object, _i, _len, _ref, _results;
@@ -832,7 +846,7 @@
       if (typeof cfx[key] !== 'function') {
         return cfx.set(key, value);
       } else {
-        if (typeof value === "string") {
+        if (typeof value === "string" && value.search(/cubic/gi) === -1) {
           return cfx[key].apply(cfx, value.split(","));
         } else {
           return cfx[key](value);
