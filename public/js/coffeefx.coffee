@@ -754,7 +754,17 @@ window.Coffea = class Coffea
   # Init execution before anything with no time
   _init: (object, object_init) ->
     @cfx._context = object
-    @cfx.set(key, value) for key, value of object_init
+    for key, value of object_init
+      if key != "coffeelet" 
+        @cfx.set(key, value)
+      else
+        if Coffeelet != undefined
+          cfl = new Coffeelet()
+          @_init(object, cfl["set"](value))
+        else 
+          console.log "theres no coffee let defined"
+        
+    
     @cfx.duration(-1)
     @cfx._addCssClass(@cfx._context, @cfx._prepare().replace(/^./, ""))
     

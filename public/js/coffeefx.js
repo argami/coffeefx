@@ -808,11 +808,20 @@
       return _results;
     };
     Coffea.prototype._init = function(object, object_init) {
-      var key, value;
+      var cfl, key, value;
       this.cfx._context = object;
       for (key in object_init) {
         value = object_init[key];
-        this.cfx.set(key, value);
+        if (key !== "coffeelet") {
+          this.cfx.set(key, value);
+        } else {
+          if (Coffeelet !== void 0) {
+            cfl = new Coffeelet();
+            this._init(object, cfl["set"](value));
+          } else {
+            console.log("theres no coffee let defined");
+          }
+        }
       }
       this.cfx.duration(-1);
       this.cfx._addCssClass(this.cfx._context, this.cfx._prepare().replace(/^./, ""));
