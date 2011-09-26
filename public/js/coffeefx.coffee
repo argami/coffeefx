@@ -123,6 +123,7 @@ window.Coffeefx = class Coffeefx
     @actions = {}
     if @el != undefined
       @duration() #add the transitionDuration as default
+      @translateZ(0)
     
   select: (selector) ->
     document.getElementById(selector) || document.querySelectorAll(selector)[0]
@@ -496,6 +497,22 @@ window.Coffeefx = class Coffeefx
   translateY: (n) -> 
     @transform("translateY(#{n}px)")
     @
+
+  ###
+  ---------------------------------
+  # * Translate on the y axis to `n`.
+  # *
+  # * @param {Number} n
+  # * @return {Move} for chaining
+  # * @api public
+  ---------------------------------
+  ###
+
+  z: (n) -> @translateZ(n)
+  translateZ: (n) -> 
+    @transform("translateZ(#{n}px)")
+    @
+
   
   ###
   ---------------------------------
@@ -741,15 +758,56 @@ window.coffea = (objects) ->
     cfa
 
 
-# window."#" = () -> console.log('test')
+
+##################################################################
+# pseudo query
+##################################################################
+
 
 window.animation_data = null
+window._ = (@tag) -> new Query_animation(@tag)
+
+class Query_animation
+  constructor: (@tag) -> 
+    if window.animation_data? 
+      @value = window.animation_data[@tag]
+    else
+      @value = document.getElementById(@tag) || document.querySelectorAll(@tag)[0]
+      
+
+  exec: (data) -> 
+    coffea = new Coffea([data])
+    coffea.execute()
+  
+  execute: () -> @exec(window.animation_data[@tag])
+  
+  reverse: () ->
+    data = window.animation_data[@tag]
+    data.animation["temp"] = data.animation.from
+    data.animation.from = data.animation.to
+    data.animation.to = data.animation.temp
+    delete data.animation.temp
+    data.animation
+    @exec(data)
+    
+  bubble: (type) ->
+    cfl = new Coffeelet()
+    
+    content = {}
+    content["id"] = @tag
+    content["init"] = cfl.bubble(@tag,  type)
+
+    coffea = new Coffea([content])
+    coffea.execute()
+    console.log coffea
+    
+
 
 window.Coffea = class Coffea
   constructor: (@objects = []) -> 
-    window.animation_data = {}
-    window.animation_data[object.id] = object for object in @objects
-      
+    data = {}
+    data[object.id] = object for object in @objects
+    window.animation_data = data  
     
   
   execute: () ->
@@ -809,3 +867,12 @@ window.Coffea = class Coffea
         @cfx = cfx.pop()
       else
         @_set(@cfx, step, step_values)
+        
+        
+window.Project = class Project
+  page: (url) ->
+    xhReq = new XMLHttpRequest();
+    xhReq.open("GET", url, false)
+    xhReq.send(null)
+    xhReq.responseText
+    

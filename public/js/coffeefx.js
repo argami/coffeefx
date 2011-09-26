@@ -1,5 +1,5 @@
 (function() {
-  var Coffea, Coffeefx, current, map;
+  var Coffea, Coffeefx, Project, Query_animation, current, map;
   var __indexOf = Array.prototype.indexOf || function(item) {
     for (var i = 0, l = this.length; i < l; i++) {
       if (this[i] === item) return i;
@@ -53,6 +53,7 @@
       this.actions = {};
       if (this.el !== void 0) {
         this.duration();
+        this.translateZ(0);
       }
     }
     Coffeefx.prototype.select = function(selector) {
@@ -510,6 +511,22 @@
     };
     /*
       ---------------------------------
+      # * Translate on the y axis to `n`.
+      # *
+      # * @param {Number} n
+      # * @return {Move} for chaining
+      # * @api public
+      ---------------------------------
+      */
+    Coffeefx.prototype.z = function(n) {
+      return this.translateZ(n);
+    };
+    Coffeefx.prototype.translateZ = function(n) {
+      this.transform("translateZ(" + n + "px)");
+      return this;
+    };
+    /*
+      ---------------------------------
       #  * Scale the x and y axis by `x`, or 
       #  * individually scale `x` and `y`.
       #  *
@@ -786,16 +803,60 @@
     };
   };
   window.animation_data = null;
+  window._ = function(tag) {
+    this.tag = tag;
+    return new Query_animation(this.tag);
+  };
+  Query_animation = (function() {
+    function Query_animation(tag) {
+      this.tag = tag;
+      if (window.animation_data != null) {
+        this.value = window.animation_data[this.tag];
+      } else {
+        this.value = document.getElementById(this.tag) || document.querySelectorAll(this.tag)[0];
+      }
+    }
+    Query_animation.prototype.exec = function(data) {
+      var coffea;
+      coffea = new Coffea([data]);
+      return coffea.execute();
+    };
+    Query_animation.prototype.execute = function() {
+      return this.exec(window.animation_data[this.tag]);
+    };
+    Query_animation.prototype.reverse = function() {
+      var data;
+      data = window.animation_data[this.tag];
+      data.animation["temp"] = data.animation.from;
+      data.animation.from = data.animation.to;
+      data.animation.to = data.animation.temp;
+      delete data.animation.temp;
+      data.animation;
+      return this.exec(data);
+    };
+    Query_animation.prototype.bubble = function(type) {
+      var cfl, coffea, content;
+      cfl = new Coffeelet();
+      content = {};
+      content["id"] = this.tag;
+      content["init"] = cfl.bubble(this.tag, type);
+      coffea = new Coffea([content]);
+      coffea.execute();
+      return console.log(coffea);
+    };
+    return Query_animation;
+  })();
   window.Coffea = Coffea = (function() {
     function Coffea(objects) {
-      var object, _i, _len, _ref;
+      var data, object, _i, _len, _ref;
       this.objects = objects != null ? objects : [];
-      window.animation_data = {};
+      data = {};
       _ref = this.objects;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         object = _ref[_i];
-        window.animation_data[object.id] = object;
+        data[object.id] = object;
       }
+      window.animation_data = data;
     }
     Coffea.prototype.execute = function() {
       var object, _i, _len, _ref, _results;
@@ -890,5 +951,16 @@
       return _results;
     };
     return Coffea;
+  })();
+  window.Project = Project = (function() {
+    function Project() {}
+    Project.prototype.page = function(url) {
+      var xhReq;
+      xhReq = new XMLHttpRequest();
+      xhReq.open("GET", url, false);
+      xhReq.send(null);
+      return xhReq.responseText;
+    };
+    return Project;
   })();
 }).call(this);
