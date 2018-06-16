@@ -6,6 +6,6 @@ to CoffeeScript and adding some testing in Jasmine
 
 ### Testing
 
-To run the test you need to install [Jasmine](http://pivotal.github.com/jasmine/) and jQuery you can use the 
-[Standalone](http://pivotal.github.com/jasmine/download.html) just placing the jasmine folder in test-js or 
+To run the test you need to install [Jasmine](https://jasmine.github.io/) and jQuery you can use the 
+[Standalone](https://github.com/jasmine/jasmine/releases) just placing the jasmine folder in test-js or 
 any of the other options (Ruby gem or Js). 
